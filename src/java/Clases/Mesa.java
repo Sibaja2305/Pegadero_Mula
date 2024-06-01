@@ -1,4 +1,4 @@
-package clasesaauxiliar;
+package Clases;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -15,6 +15,9 @@ public class Mesa {
   private int  N_Mesa;
    
    private int N_Capacidad;
+
+    public Mesa() {
+    }
 
     public Mesa(int C_Mesa, int N_Mesa, int N_Capacidad) {
         this.C_Mesa = C_Mesa;
@@ -68,9 +71,7 @@ public class Mesa {
     public String toString() {
         return "Mesa{" + "C_Mesa=" + C_Mesa + ", N_Mesa=" + N_Mesa + ", N_Capacidad=" + N_Capacidad + '}';
     }
-    
-    
-    
+
     
     
     

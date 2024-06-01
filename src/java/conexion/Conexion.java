@@ -4,17 +4,36 @@
  */
 package conexion;
 
+import Clases.Bonificacion;
 import Clases.Caja;
 import Clases.Canton;
+import Clases.Cliente;
+import Clases.ClientesSucursales;
+import Clases.Combo;
+import Clases.DetallePedido;
 import Clases.DireccionFisica;
 import Clases.Distrito;
 import Clases.Empleado;
+import Clases.EstadoPago;
+import Clases.Express;
 import Clases.HorasExtras;
+import Clases.Ingredientes;
+import Clases.Mesa;
+import Clases.MetodoPago;
+import Clases.PagoEmpleado;
+import Clases.PagoProveedor;
 import Clases.PagosServicios;
+import Clases.Pedido;
+import Clases.Producto;
+import Clases.ProductoIngrediente;
+import Clases.Proveedor;
 import Clases.Provincia;
 import Clases.RolEmpleado;
 import Clases.Servicios;
 import Clases.Sucursal;
+import Clases.TipoProducto;
+import Clases.UnidadMedida;
+import Clases.Vacaciones;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -54,35 +73,34 @@ public class Conexion {
         }
     }
 
-    public static ArrayList<Cliente> busqueda(String criterioBusqueda) throws SQLException, ClassNotFoundException {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        Connection conexion = Conexion.getConexion(); // Obtener la conexión
-
-        if (conexion != null) {
-            ArrayList<Cliente> clientes = new ArrayList<>();
-            String procedimiento = "{call SP_OBTENER_CLIENTES_BUSQUEDA(?)}";
-
-            try (CallableStatement llamada = conexion.prepareCall(procedimiento)) {
-                llamada.setString(1, criterioBusqueda); // Establecer el parámetro
-
-                ResultSet resultado = llamada.executeQuery(); // Ejecutar el procedimiento almacenado
-
-                while (resultado.next()) {
-
-                    String nombre = resultado.getString("D_Nombre");
-                    String primerApellido = resultado.getString("D_Primer_Apellido");
-                    String segundoApellido = resultado.getString("D_Segundo_Apellido");
-                    Cliente cliente = new Cliente(nombre, primerApellido, segundoApellido);
-                    clientes.add(cliente);
-                }
-            }
-
-            return clientes; // Devolver el ArrayList de clientes
-        }
-
-        return null; // En caso de conexión nula
-    }
-
+//    public static ArrayList<Cliente> busqueda(String criterioBusqueda) throws SQLException, ClassNotFoundException {
+//        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//        Connection conexion = Conexion.getConexion(); // Obtener la conexión
+//
+//        if (conexion != null) {
+//            ArrayList<Cliente> clientes = new ArrayList<>();
+//            String procedimiento = "{call SP_OBTENER_CLIENTES_BUSQUEDA(?)}";
+//
+//            try (CallableStatement llamada = conexion.prepareCall(procedimiento)) {
+//                llamada.setString(1, criterioBusqueda); // Establecer el parámetro
+//
+//                ResultSet resultado = llamada.executeQuery(); // Ejecutar el procedimiento almacenado
+//
+//                while (resultado.next()) {
+//
+//                    String nombre = resultado.getString("D_Nombre");
+//                    String primerApellido = resultado.getString("D_Primer_Apellido");
+//                    String segundoApellido = resultado.getString("D_Segundo_Apellido");
+//                    Cliente cliente = new Cliente(nombre, primerApellido, segundoApellido);
+//                    clientes.add(cliente);
+//                }
+//            }
+//
+//            return clientes; // Devolver el ArrayList de clientes
+//        }
+//
+//        return null; // En caso de conexión nula
+//    }
     public boolean insertarProvincia(int cProvincia, String dProvincia) throws ClassNotFoundException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         try (Connection con = getConexion();
@@ -967,4 +985,1533 @@ public class Conexion {
             return false; // Indicar que la actualización falló
         }
     }
+
+    public ArrayList<Bonificacion> seleccionarBonificaciones() {
+        ArrayList<Bonificacion> bonificaciones = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Bonificaciones}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cBonificacion = rs.getInt("C_Bonificacion");
+                Date fBonificacion = rs.getDate("F_Bonificacion");
+                double mBonificacion = rs.getDouble("M_Bonificacion");
+                String dMotivo = rs.getString("D_Motivo");
+                int cEmpleado = rs.getInt("C_Empleado");
+
+                Bonificacion bonificacion = new Bonificacion(cBonificacion, fBonificacion, mBonificacion, dMotivo, cEmpleado);
+                bonificaciones.add(bonificacion);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar bonificaciones: " + e.getMessage());
+        }
+
+        return bonificaciones;
+    }
+
+    public boolean insertarBonificacion(Date fBonificacion, double mBonificacion, String dMotivo, int cEmpleado) {
+        String procedimiento = "{call SP_Insertar_Bonificaciones(?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setDate(1, (fBonificacion));
+            stmt.setDouble(2, mBonificacion);
+            stmt.setString(3, dMotivo);
+            stmt.setInt(4, cEmpleado);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar bonificación: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarBonificacion(int cBonificacion) {
+        String procedimiento = "{call SP_Eliminar_Bonificaciones(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cBonificacion);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar bonificación: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarBonificacion(int cBonificacion, Date fBonificacion, double mBonificacion, String dMotivo, int cEmpleado) {
+        String procedimiento = "{call SP_Actualizar_Bonificaciones(?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cBonificacion);
+            stmt.setDate(2, (fBonificacion)); // Convertir java.util.Date a java.sql.Date
+            stmt.setDouble(3, mBonificacion); // Convertir double a BigDecimal
+            stmt.setString(4, dMotivo);
+            stmt.setInt(5, cEmpleado);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar bonificación: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<Vacaciones> seleccionarVacaciones() {
+        ArrayList<Vacaciones> vacaciones = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Vacaciones}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cVacaciones = rs.getInt("C_Vacaciones");
+                int cEmpleado = rs.getInt("C_Empleado");
+                Date fInicio = rs.getDate("F_Inicio");
+                Date fFinalizacion = rs.getDate("F_Finalizacion");
+
+                Vacaciones vacacion = new Vacaciones(cVacaciones, cEmpleado, fInicio, fFinalizacion);
+                vacaciones.add(vacacion);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar vacaciones: " + e.getMessage());
+        }
+
+        return vacaciones;
+    }
+
+    public boolean insertarVacaciones(int cEmpleado, Date fInicio, Date fFinalizacion) {
+        String procedimiento = "{call SP_Insertar_Vacaciones(?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cEmpleado);
+            stmt.setDate(2, fInicio);
+            stmt.setDate(3, fFinalizacion);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar vacaciones: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarVacaciones(int cVacaciones) {
+        String procedimiento = "{call SP_Eliminar_Vacaciones(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cVacaciones);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar vacaciones: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarVacaciones(int cVacaciones, int cEmpleado, java.util.Date fInicio, java.util.Date fFinalizacion) {
+        String procedimiento = "{call SP_Actualizar_Vacaciones(?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cVacaciones);
+            stmt.setInt(2, cEmpleado);
+            stmt.setDate(3, new Date(fInicio.getTime())); // Convertir java.util.Date a java.sql.Date
+            stmt.setDate(4, new Date(fFinalizacion.getTime())); // Convertir java.util.Date a java.sql.Date
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar vacaciones: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<EstadoPago> seleccionarEstadoPago() {
+        ArrayList<EstadoPago> estadosPago = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Estado_Pago}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cEstadoPago = rs.getInt("C_Estado_Pago");
+                String dEstado = rs.getString("D_Estado");
+
+                EstadoPago estadoPago = new EstadoPago(cEstadoPago, dEstado);
+                estadosPago.add(estadoPago);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar estados de pago: " + e.getMessage());
+        }
+
+        return estadosPago;
+    }
+
+    public boolean insertarEstadoPago(String dEstado) {
+        String procedimiento = "{call SP_Insertar_Estado_Pago(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setString(1, dEstado);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar estado de pago: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarEstadoPago(int cEstadoPago) {
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Estado_Pago(?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cEstadoPago);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar estado de pago: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarEstadoPago(int cEstadoPago, String dEstado) {
+        String procedimiento = "{call SP_Actualizar_Estado_Pago(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cEstadoPago);
+            stmt.setString(2, dEstado);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar estado de pago: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<PagoEmpleado> seleccionarPagosEmpleados() {
+        ArrayList<PagoEmpleado> pagosEmpleados = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Pagos_Empleados}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cPagoEmpleado = rs.getInt("C_Pago_Empleado");
+                int cEmpleado = rs.getInt("C_Empleado");
+                int cHorasExtra = rs.getInt("C_Horas_Extra");
+                int cEstadoPago = rs.getInt("C_Estado_Pago");
+                Date fEmision = rs.getDate("F_Emision");
+                Date fPago = rs.getDate("F_Pago");
+                double mPago = rs.getDouble("M_Pago");
+                double mPagoCCSS = rs.getDouble("M_Pago_CCSS");
+                int cBonificacion = rs.getInt("C_Bonificacion");
+
+                PagoEmpleado pagoEmpleado = new PagoEmpleado(cPagoEmpleado, cEmpleado, cHorasExtra, cEstadoPago, fEmision, fPago, mPago, mPagoCCSS, cBonificacion);
+                pagosEmpleados.add(pagoEmpleado);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar pagos de empleados: " + e.getMessage());
+        }
+
+        return pagosEmpleados;
+    }
+
+    public boolean insertarPagoEmpleado(int cEmpleado, int cHorasExtra, int cEstadoPago, Date fEmision, Date fPago, double mPago, double mPagoCCSS, int cBonificacion) {
+        String procedimiento = "{call SP_Insertar_Pagos_Empleados(?, ?, ?, ?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cEmpleado);
+            stmt.setInt(2, cHorasExtra);
+            stmt.setInt(3, cEstadoPago);
+            stmt.setDate(4, fEmision);
+            stmt.setDate(5, fPago);
+            stmt.setDouble(6, mPago);
+            stmt.setDouble(7, mPagoCCSS);
+            stmt.setInt(8, cBonificacion);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar pago de empleado: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarPagoEmpleado(int cPagoEmpleado) {
+        String procedimiento = "{call SP_Eliminar_Pagos_Empleados(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cPagoEmpleado);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar pago de empleado: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarPagoEmpleado(int cPagoEmpleado, int cEmpleado, int cHorasExtra, int cEstadoPago,
+            Date fEmision, Date fPago, double mPago, double mPagoCCSS, int cBonificacion) {
+        String procedimiento = "{call SP_Actualizar_Pagos_Empleados(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cPagoEmpleado);
+            stmt.setInt(2, cEmpleado);
+            stmt.setInt(3, cHorasExtra);
+            stmt.setInt(4, cEstadoPago);
+            stmt.setDate(5, fEmision);
+            stmt.setDate(6, fPago);
+            stmt.setDouble(7, mPago);
+            stmt.setDouble(8, mPagoCCSS);
+            stmt.setInt(9, cBonificacion);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar pago de empleado: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<Cliente> obtenerClientes() {
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Cliente}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar los clientes a la lista
+            while (rs.next()) {
+                int cCliente = rs.getInt("C_Cliente");
+                int cDireccionFisica = rs.getInt("C_Direccion_Fisica");
+                String cCedula = rs.getString("C_Cedula");
+                String nNumeroTelefono = rs.getString("N_Numero_Telefono");
+
+                Cliente cliente = new Cliente(cCliente, cDireccionFisica, cCedula, nNumeroTelefono);
+                clientes.add(cliente);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los clientes: " + e.getMessage());
+        }
+        return clientes;
+    }
+
+    public boolean insertarCliente(int cDireccionFisica, String cCedula, String nNumeroTelefono) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Cliente(?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cDireccionFisica);
+            stmt.setString(2, cCedula);
+            stmt.setString(3, nNumeroTelefono);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar cliente: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarCliente(int cCliente) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Cliente(?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cCliente);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar cliente: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarCliente(int cCliente, int cDireccionFisica, String cCedula, String nNumeroTelefono) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Cliente(?, ?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cCliente);
+            stmt.setInt(2, cDireccionFisica);
+            stmt.setString(3, cCedula);
+            stmt.setString(4, nNumeroTelefono);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar cliente: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<Proveedor> seleccionarProveedores() {
+        ArrayList<Proveedor> proveedores = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Proveedores}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cProveedor = rs.getInt("C_Proveedor");
+                int cSucursal = rs.getInt("C_Sucursal");
+                String dProveedor = rs.getString("D_Proveedor");
+
+                Proveedor proveedor = new Proveedor(cProveedor, cSucursal, dProveedor);
+                proveedores.add(proveedor);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar proveedores: " + e.getMessage());
+        }
+
+        return proveedores;
+    }
+
+    public boolean insertarProveedor(int cSucursal, String dProveedor) {
+        String procedimiento = "{call SP_Insertar_Proveedores(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cSucursal);
+            stmt.setString(2, dProveedor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar proveedor: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarProveedor(int cProveedor) {
+        String procedimiento = "{call SP_Eliminar_Proveedores(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cProveedor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar proveedor: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarProveedor(int cProveedor, int cSucursal, String dProveedor) {
+        String procedimiento = "{call SP_Actualizar_Proveedores(?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cProveedor);
+            stmt.setInt(2, cSucursal);
+            stmt.setString(3, dProveedor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar proveedor: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<UnidadMedida> seleccionarUnidadesMedida() {
+        ArrayList<UnidadMedida> unidadesMedida = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Unidades_Medida}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cUnidadMedida = rs.getInt("C_Unidad_Medida");
+                String dUnidadMedida = rs.getString("D_Unidad_Medida");
+                double qValor = rs.getDouble("Q_Valor");
+
+                UnidadMedida unidad = new UnidadMedida(cUnidadMedida, dUnidadMedida, qValor);
+                unidadesMedida.add(unidad);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar unidades de medida: " + e.getMessage());
+        }
+
+        return unidadesMedida;
+    }
+
+    public boolean insertarUnidadMedida(String dUnidadMedida, double qValor) {
+        String procedimiento = "{call SP_Insertar_Unidades_Medida(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setString(1, dUnidadMedida);
+            stmt.setDouble(2, qValor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.executeUpdate();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar unidad de medida: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarUnidadMedida(int cUnidadMedida) {
+        String procedimiento = "{call SP_Eliminar_Unidades_Medida(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cUnidadMedida);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.executeUpdate();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar unidad de medida: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarUnidadMedida(int cUnidadMedida, String dUnidadMedida, double qValor) {
+        String procedimiento = "{call SP_Actualizar_Unidades_Medida(?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cUnidadMedida);
+            stmt.setString(2, dUnidadMedida);
+            stmt.setDouble(3, qValor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.executeUpdate();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar unidad de medida: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<Ingredientes> seleccionarIngredientes() {
+        ArrayList<Ingredientes> ingredientes = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Ingredientes}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cIngrediente = rs.getInt("C_Ingrediente");
+                int cSucursal = rs.getInt("C_Sucursal");
+                int cProveedor = rs.getInt("C_Proveedor");
+                String dIngrediente = rs.getString("D_Ingrediente");
+                double qActual = rs.getDouble("Q_Actual");
+                int cUnidadMedida = rs.getInt("C_Unidad_Medida");
+
+                Ingredientes ingrediente = new Ingredientes(cIngrediente, cSucursal, cProveedor, dIngrediente, qActual, cUnidadMedida);
+                ingredientes.add(ingrediente);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar ingredientes: " + e.getMessage());
+        }
+
+        return ingredientes;
+    }
+
+    public boolean insertarIngrediente(int cSucursal, int cProveedor, String dIngrediente, double qActual, int cUnidadMedida) {
+        String procedimiento = "{call SP_Insertar_Ingredientes(?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cSucursal);
+            stmt.setInt(2, cProveedor);
+            stmt.setString(3, dIngrediente);
+            stmt.setDouble(4, qActual);
+            stmt.setInt(5, cUnidadMedida);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar ingrediente: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarIngrediente(int cIngrediente) {
+        String procedimiento = "{call SP_Eliminar_Ingredientes(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cIngrediente);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar ingrediente: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarIngrediente(int cIngrediente, int cSucursal, int cProveedor, String dIngrediente,
+            double qActual, int cUnidadMedida) {
+        String procedimiento = "{call SP_Actualizar_Ingredientes(?, ?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cIngrediente);
+            stmt.setInt(2, cSucursal);
+            stmt.setInt(3, cProveedor);
+            stmt.setString(4, dIngrediente);
+            stmt.setDouble(5, qActual);
+            stmt.setInt(6, cUnidadMedida);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar ingrediente: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<PagoProveedor> seleccionarPagosProveedores() {
+        ArrayList<PagoProveedor> pagosProveedores = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Pagos_Proveedores}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cPagoProveedor = rs.getInt("C_Pago_Proveedor");
+                int cProveedor = rs.getInt("C_Proveedor");
+                double mPagoProveedor = rs.getDouble("M_Pago_Proveedor");
+
+                PagoProveedor pagoProveedor = new PagoProveedor(cPagoProveedor, cProveedor, mPagoProveedor);
+                pagosProveedores.add(pagoProveedor);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar pagos a proveedores: " + e.getMessage());
+        }
+
+        return pagosProveedores;
+    }
+
+    public boolean insertarPagoProveedor(int cProveedor, double mPagoProveedor) {
+        String procedimiento = "{call SP_Insertar_Pagos_Proveedores(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cProveedor);
+            stmt.setDouble(2, mPagoProveedor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar pago a proveedor: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarPagoProveedor(int cPagoProveedor) {
+        String procedimiento = "{call SP_Eliminar_Pagos_Proveedores(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cPagoProveedor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar pago a proveedor: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarPagoProveedor(int cPagoProveedor, int cProveedor, double mPagoProveedor) {
+        String procedimiento = "{call SP_Actualizar_Pagos_Proveedores(?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cPagoProveedor);
+            stmt.setInt(2, cProveedor);
+            stmt.setDouble(3, mPagoProveedor);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar pago a proveedor: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<TipoProducto> seleccionarTiposProductos() {
+        ArrayList<TipoProducto> tiposProductos = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Tipos_Productos}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cTipoProducto = rs.getInt("C_Tipo_Producto");
+                String dTipoProducto = rs.getString("D_Tipo_Producto");
+
+                TipoProducto tipoProducto = new TipoProducto(cTipoProducto, dTipoProducto);
+                tiposProductos.add(tipoProducto);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar tipos de productos: " + e.getMessage());
+        }
+
+        return tiposProductos;
+    }
+
+    public boolean insertarTipoProducto(String dTipoProducto) {
+        String procedimiento = "{call SP_Insertar_Tipos_Productos(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setString(1, dTipoProducto);
+
+            // Ejecutar la actualización
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al insertar tipo de producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarTipoProducto(int cTipoProducto) {
+        String procedimiento = "{call SP_Eliminar_Tipos_Productos(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cTipoProducto);
+
+            // Ejecutar la actualización
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar tipo de producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean actualizarTipoProducto(int cTipoProducto, String dTipoProducto) {
+        String procedimiento = "{call SP_Actualizar_Tipos_Productos(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cTipoProducto);
+            stmt.setString(2, dTipoProducto);
+
+            // Ejecutar la actualización
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar tipo de producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public ArrayList<Combo> seleccionarCombos() {
+        ArrayList<Combo> combos = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Combos}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cCombo = rs.getInt("C_Combo");
+                String dCombo = rs.getString("D_Combo");
+
+                Combo combo = new Combo(cCombo, dCombo);
+                combos.add(combo);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar combos: " + e.getMessage());
+        }
+
+        return combos;
+    }
+
+    public boolean insertarCombo(String dCombo) {
+        String procedimiento = "{call SP_Insertar_Combos(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            stmt.setString(1, dCombo);
+
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al insertar combo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarCombo(int cCombo) {
+        String procedimiento = "{call SP_Eliminar_Combos(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            stmt.setInt(1, cCombo);
+
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar combo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean actualizarCombo(int cCombo, String dCombo) {
+        String procedimiento = "{call SP_Actualizar_Combos(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            stmt.setInt(1, cCombo);
+            stmt.setString(2, dCombo);
+
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar combo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public ArrayList<Producto> seleccionarProductos() {
+        ArrayList<Producto> productos = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Productos}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cProducto = rs.getInt("C_Producto");
+                Integer cCombo = rs.getObject("C_Combo") != null ? rs.getInt("C_Combo") : null;
+                int cSucursal = rs.getInt("C_Sucursal");
+                int cTipoProducto = rs.getInt("C_Tipo_Producto");
+                String dProducto = rs.getString("D_Producto");
+                double mPrecio = rs.getDouble("M_Precio");
+
+                Producto producto = new Producto(cProducto, cCombo, cSucursal, cTipoProducto, dProducto, mPrecio);
+                productos.add(producto);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar productos: " + e.getMessage());
+        }
+
+        return productos;
+    }
+
+    public boolean insertarProducto(Integer cCombo, int cSucursal, int cTipoProducto, String dProducto, double mPrecio) {
+        String procedimiento = "{call SP_Insertar_Productos(?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            if (cCombo != null) {
+                stmt.setInt(1, cCombo);
+            } else {
+                stmt.setNull(1, java.sql.Types.TINYINT);
+            }
+            stmt.setInt(2, cSucursal);
+            stmt.setInt(3, cTipoProducto);
+            stmt.setString(4, dProducto);
+            stmt.setDouble(5, mPrecio);
+
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al insertar producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarProducto(int cProducto) {
+        String procedimiento = "{call SP_Eliminar_Productos(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cProducto);
+
+            // Ejecutar la eliminación
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean actualizarProducto(int cProducto, Integer cCombo, int cSucursal, int cTipoProducto, String dProducto, double mPrecio) {
+        String procedimiento = "{call SP_Actualizar_Productos(?, ?, ?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cProducto);
+            if (cCombo != null) {
+                stmt.setInt(2, cCombo);
+            } else {
+                stmt.setNull(2, java.sql.Types.TINYINT);
+            }
+            stmt.setInt(3, cSucursal);
+            stmt.setInt(4, cTipoProducto);
+            stmt.setString(5, dProducto);
+            stmt.setDouble(6, mPrecio);
+
+            // Ejecutar la actualización
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+   public ArrayList<DetallePedido> seleccionarDetallesPedido(int cPedido) {
+        ArrayList<DetallePedido> detallesPedido = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Detalles_Pedido(?)}";
+
+        try (Connection con = Conexion.getConexion();
+             CallableStatement stmt = con.prepareCall(procedimiento)) {
+            
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cPedido);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int cDetallePedido = rs.getInt("C_Detalle_Pedido");
+                    int cProducto = rs.getInt("C_Producto");
+                    String nombreProducto = rs.getString("D_Producto");
+                    byte qPedido = rs.getByte("Q_Pedido");
+                    double mTotal = rs.getDouble("M_Total");
+                    
+                    DetallePedido detallePedido = new DetallePedido(cDetallePedido, cPedido, cProducto, nombreProducto, qPedido, mTotal);
+                    detallesPedido.add(detallePedido);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar detalles de pedido: " + e.getMessage());
+        }
+
+        return detallesPedido;
+    }
+
+    public boolean eliminarDetallePedido(int cDetallePedido) {
+        String procedimiento = "{call SP_Eliminar_Detalles_Pedido(?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cDetallePedido);
+
+            // Ejecutar la eliminación
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar detalle del pedido: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insertarDetallePedido(int cPedido, int cProducto, int qPedido) {
+        String procedimiento = "{call SP_Insertar_Detalle_Pedido(?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            stmt.setInt(1, cPedido);
+            stmt.setInt(2, cProducto);
+            stmt.setInt(3, qPedido);
+
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al insertar detalle de pedido: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //productos
+    public ArrayList<ProductoIngrediente> seleccionarProductosIngredientes() {
+        ArrayList<ProductoIngrediente> productosIngredientes = new ArrayList<>();
+        String procedimiento = "{call SP_Seleccionar_Productos_Ingredientes}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int cIngredientes = rs.getInt("C_Ingredientes");
+                int cProductos = rs.getInt("C_Productos");
+                int qConsumo = rs.getInt("Q_Consumo");
+                int cUnidadMedida = rs.getInt("C_Unidad_Medida");
+
+                ProductoIngrediente productoIngrediente = new ProductoIngrediente(cIngredientes, cProductos, qConsumo, cUnidadMedida);
+                productosIngredientes.add(productoIngrediente);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al seleccionar productos e ingredientes: " + e.getMessage());
+        }
+
+        return productosIngredientes;
+    }
+
+    public boolean insertarProductoIngrediente(int cIngredientes, int cProductos, double qConsumo, int cUnidadMedida) {
+        String procedimiento = "{call SP_Insertar_Productos_Ingredientes(?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cIngredientes);
+            stmt.setInt(2, cProductos);
+            stmt.setDouble(3, qConsumo);
+            stmt.setInt(4, cUnidadMedida);
+
+            // Ejecutar la inserción
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al insertar producto ingrediente: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarProductoIngrediente(int cIngredientes, int cProductos) {
+        String procedimiento = "{call SP_Eliminar_Productos_Ingredientes(?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cIngredientes);
+            stmt.setInt(2, cProductos);
+
+            // Ejecutar la eliminación
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar producto ingrediente: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean actualizarProductoIngrediente(int cIngredientes, int cProductos, double qConsumo, int cUnidadMedida) {
+        String procedimiento = "{call SP_Actualizar_Productos_Ingredientes(?, ?, ?, ?)}";
+
+        try (Connection con = Conexion.getConexion();
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cIngredientes);
+            stmt.setInt(2, cProductos);
+            stmt.setDouble(3, qConsumo);
+            stmt.setInt(4, cUnidadMedida);
+
+            // Ejecutar la actualización
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar producto ingrediente: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public ArrayList<ClientesSucursales> obtenerClientesSucursales() {
+        ArrayList<ClientesSucursales> clientesSucursales = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Clientes_Sucursales}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar las relaciones clientes-sucursales a la lista
+            while (rs.next()) {
+                int cCliente = rs.getInt("C_Cliente");
+                int cSucursales = rs.getInt("C_Sucursales");
+
+                ClientesSucursales clienteSucursal = new ClientesSucursales(cCliente, cSucursales);
+                clientesSucursales.add(clienteSucursal);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los clientes y sucursales: " + e.getMessage());
+        }
+        return clientesSucursales;
+    }
+
+    public boolean insertarClienteSucursal(int cCliente, int cSucursales) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Clientes_Sucursales(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cCliente);
+            stmt.setInt(2, cSucursales);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar cliente y sucursal: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarClienteSucursal(int cCliente, int cSucursales) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Clientes_Sucursales(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cCliente);
+            stmt.setInt(2, cSucursales);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar cliente y sucursal: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public ArrayList<Express> obtenerExpress() {
+        ArrayList<Express> expressList = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Express}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar los registros de express a la lista
+            while (rs.next()) {
+                int cExpress = rs.getInt("C_Express");
+                String dNombreExpress = rs.getString("D_Nombre_Express");
+                String dDireccionCliente = rs.getString("D_Direccion_Cliente");
+
+                Express express = new Express(cExpress, dNombreExpress, dDireccionCliente);
+                expressList.add(express);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los registros de express: " + e.getMessage());
+        }
+        return expressList;
+    }
+
+    public boolean insertarExpress(String dNombreExpress, String dDireccionCliente) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Express(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setString(1, dNombreExpress);
+            stmt.setString(2, dDireccionCliente);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar registro de express: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarExpress(int cExpress) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Express(?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cExpress);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar registro de express: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarExpress(int cExpress, String dNombreExpress, String dDireccionCliente) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Express(?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cExpress);
+            stmt.setString(2, dNombreExpress);
+            stmt.setString(3, dDireccionCliente);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar registro de express: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<Pedido> obtenerPedidos() {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Pedido}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar los registros de pedidos a la lista
+            while (rs.next()) {
+                int cPedido = rs.getInt("C_Pedido");
+                int cMesa = rs.getObject("C_Mesa") != null ? rs.getInt("C_Mesa") : 0;
+                int cEmpleado = rs.getInt("C_Empleado");
+                int cExpress = rs.getObject("C_Express") != null ? rs.getInt("C_Express") : 0;
+                int cCliente = rs.getInt("C_Cliente");
+                int cSucursal = rs.getInt("C_Sucursal");
+                Time fHoraSolicitud = rs.getTime("F_Hora_Solicitud");
+                Time fHoraEntrega = rs.getTime("F_Hora_Entrega");
+
+                Pedido pedido = new Pedido(cPedido, cMesa, cEmpleado, cExpress, cCliente, cSucursal, fHoraSolicitud, fHoraEntrega);
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los pedidos: " + e.getMessage());
+        }
+        return pedidos;
+    }
+
+    public int insertarPedido(int cMesa, int cEmpleado, int cExpress, int cCliente, int cSucursal, Time fHoraSolicitud, Time fHoraEntrega) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Pedido(?, ?, ?, ?, ?, ?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            if (cMesa != 0) {
+                stmt.setInt(1, cMesa);
+            } else {
+                stmt.setNull(1, java.sql.Types.TINYINT);
+            }
+            stmt.setInt(2, cEmpleado);
+            if (cExpress != 0) {
+                stmt.setInt(3, cExpress);
+            } else {
+                stmt.setNull(3, java.sql.Types.TINYINT);
+            }
+            stmt.setInt(4, cCliente);
+            stmt.setInt(5, cSucursal);
+            stmt.setTime(6, fHoraSolicitud);
+            stmt.setTime(7, fHoraEntrega);
+
+            stmt.registerOutParameter(8, java.sql.Types.INTEGER);
+
+            stmt.execute();
+
+            int codigoPedido = stmt.getInt(8);
+
+            return codigoPedido;
+        } catch (SQLException e) {
+            System.out.println("Error al insertar pedido: " + e.getMessage());
+            return -1; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarPedido(int cPedido) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Pedido(?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cPedido);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar pedido: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarPedido(int cPedido, int cMesa, int cEmpleado, int cExpress, int cCliente, int cSucursal, Time fHoraSolicitud, Time fHoraEntrega) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Pedido(?, ?, ?, ?, ?, ?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cPedido);
+            if (cMesa != 0) {
+                stmt.setInt(2, cMesa);
+            } else {
+                stmt.setNull(2, java.sql.Types.TINYINT);
+            }
+            stmt.setInt(3, cEmpleado);
+            if (cExpress != 0) {
+                stmt.setInt(4, cExpress);
+            } else {
+                stmt.setNull(4, java.sql.Types.TINYINT);
+            }
+            stmt.setInt(5, cCliente);
+            stmt.setInt(6, cSucursal);
+            stmt.setTime(7, fHoraSolicitud);
+            stmt.setTime(8, fHoraEntrega);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar pedido: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<MetodoPago> obtenerMetodosPago() {
+        ArrayList<MetodoPago> metodosPago = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Metodo_Pago}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar los registros de métodos de pago a la lista
+            while (rs.next()) {
+                int cMetodoPago = rs.getInt("C_Metodo_Pago");
+                String dMetodoPago = rs.getString("D_Metodo_Pago");
+
+                MetodoPago metodoPago = new MetodoPago(cMetodoPago, dMetodoPago);
+                metodosPago.add(metodoPago);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los métodos de pago: " + e.getMessage());
+        }
+        return metodosPago;
+    }
+
+    public boolean insertarMetodoPago(String dMetodoPago) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Metodo_Pago(?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setString(1, dMetodoPago);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar método de pago: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarMetodoPago(int cMetodoPago) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Metodo_Pago(?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cMetodoPago);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar método de pago: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarMetodoPago(int cMetodoPago, String dMetodoPago) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Metodo_Pago(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cMetodoPago);
+            stmt.setString(2, dMetodoPago);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar método de pago: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public ArrayList<Mesa> obtenerMesas() {
+        ArrayList<Mesa> mesas = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Mesa}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar las mesas a la lista
+            while (rs.next()) {
+                int cMesa = rs.getInt("C_Mesa");
+                int nMesa = rs.getInt("N_Mesa");
+                int nCapacidad = rs.getInt("N_Capacidad");
+
+                Mesa mesa = new Mesa(cMesa, nMesa, nCapacidad);
+                mesas.add(mesa);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener las mesas: " + e.getMessage());
+        }
+        return mesas;
+    }
+
+    public boolean insertarMesa(int nMesa, int nCapacidad) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Mesa(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, nMesa);
+            stmt.setInt(2, nCapacidad);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar mesa: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public boolean eliminarMesa(int cMesa) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Mesa(?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cMesa);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar mesa: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
+    }
+
+    public boolean actualizarMesa(int cMesa, int nMesa, int nCapacidad) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Mesa(?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cMesa);
+            stmt.setInt(2, nMesa);
+            stmt.setInt(3, nCapacidad);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar mesa: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
 }

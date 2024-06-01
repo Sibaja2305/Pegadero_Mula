@@ -1,4 +1,4 @@
-package clasesaauxiliar;
+package Clases;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -13,6 +13,9 @@ public class Express {
    private int C_Express;
    private String D_Nombre_Express;
  private String   D_Direccion_Cliente;
+
+    public Express() {
+    }
 
     public Express(int C_Express, String D_Nombre_Express, String D_Direccion_Cliente) {
         this.C_Express = C_Express;
@@ -66,9 +69,7 @@ public class Express {
     public String toString() {
         return "Express{" + "C_Express=" + C_Express + ", D_Nombre_Express=" + D_Nombre_Express + ", D_Direccion_Cliente=" + D_Direccion_Cliente + '}';
     }
- 
- 
- 
+
     
     
     

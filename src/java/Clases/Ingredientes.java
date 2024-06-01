@@ -2,109 +2,119 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package clasesaauxiliar;
+package Clases;
 
 /**
  *
- * @author Usuario
+ * @author Hp EliteBook
  */
 public class Ingredientes {
-   private int C_Ingrediente;
-  private int  C_Sucursal;
-  private String  D_Ingrediente;
-  private double  Q_Actual;
-   private int C_Unidad_Medida;
+    private int codigoIngrediente;
+    private int codigoSucursal;
+    private int codigoProveedor;
+    private String nombreIngrediente;
+    private double cantidad;
+    private int codigoUnidadMedida;
 
-    public Ingredientes(int C_Ingrediente, int C_Sucursal, String D_Ingrediente, double Q_Actual, int C_Unidad_Medida) {
-        this.C_Ingrediente = C_Ingrediente;
-        this.C_Sucursal = C_Sucursal;
-        this.D_Ingrediente = D_Ingrediente;
-        this.Q_Actual = Q_Actual;
-        this.C_Unidad_Medida = C_Unidad_Medida;
+    public Ingredientes() {
+    }
+
+    public Ingredientes(int codigoIngrediente, int codigoSucursal, int codigoProveedor, String nombreIngrediente, double cantidad, int codigoUnidadMedida) {
+        this.codigoIngrediente = codigoIngrediente;
+        this.codigoSucursal = codigoSucursal;
+        this.codigoProveedor = codigoProveedor;
+        this.nombreIngrediente = nombreIngrediente;
+        this.cantidad = cantidad;
+        this.codigoUnidadMedida = codigoUnidadMedida;
     }
 
     /**
-     * @return the C_Ingrediente
+     * @return the codigoIngrediente
      */
-    public int getC_Ingrediente() {
-        return C_Ingrediente;
+    public int getCodigoIngrediente() {
+        return codigoIngrediente;
     }
 
     /**
-     * @param C_Ingrediente the C_Ingrediente to set
+     * @param codigoIngrediente the codigoIngrediente to set
      */
-    public void setC_Ingrediente(int C_Ingrediente) {
-        this.C_Ingrediente = C_Ingrediente;
+    public void setCodigoIngrediente(int codigoIngrediente) {
+        this.codigoIngrediente = codigoIngrediente;
     }
 
     /**
-     * @return the C_Sucursal
+     * @return the codigoSucursal
      */
-    public int getC_Sucursal() {
-        return C_Sucursal;
+    public int getCodigoSucursal() {
+        return codigoSucursal;
     }
 
     /**
-     * @param C_Sucursal the C_Sucursal to set
+     * @param codigoSucursal the codigoSucursal to set
      */
-    public void setC_Sucursal(int C_Sucursal) {
-        this.C_Sucursal = C_Sucursal;
+    public void setCodigoSucursal(int codigoSucursal) {
+        this.codigoSucursal = codigoSucursal;
     }
 
     /**
-     * @return the D_Ingrediente
+     * @return the codigoProveedor
      */
-    public String getD_Ingrediente() {
-        return D_Ingrediente;
+    public int getCodigoProveedor() {
+        return codigoProveedor;
     }
 
     /**
-     * @param D_Ingrediente the D_Ingrediente to set
+     * @param codigoProveedor the codigoProveedor to set
      */
-    public void setD_Ingrediente(String D_Ingrediente) {
-        this.D_Ingrediente = D_Ingrediente;
+    public void setCodigoProveedor(int codigoProveedor) {
+        this.codigoProveedor = codigoProveedor;
     }
 
     /**
-     * @return the Q_Actual
+     * @return the nombreIngrediente
      */
-    public double getQ_Actual() {
-        return Q_Actual;
+    public String getNombreIngrediente() {
+        return nombreIngrediente;
     }
 
     /**
-     * @param Q_Actual the Q_Actual to set
+     * @param nombreIngrediente the nombreIngrediente to set
      */
-    public void setQ_Actual(double Q_Actual) {
-        this.Q_Actual = Q_Actual;
+    public void setNombreIngrediente(String nombreIngrediente) {
+        this.nombreIngrediente = nombreIngrediente;
     }
 
     /**
-     * @return the C_Unidad_Medida
+     * @return the cantidad
      */
-    public int getC_Unidad_Medida() {
-        return C_Unidad_Medida;
+    public double getCantidad() {
+        return cantidad;
     }
 
     /**
-     * @param C_Unidad_Medida the C_Unidad_Medida to set
+     * @param cantidad the cantidad to set
      */
-    public void setC_Unidad_Medida(int C_Unidad_Medida) {
-        this.C_Unidad_Medida = C_Unidad_Medida;
+    public void setCantidad(double cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    /**
+     * @return the codigoUnidadMedida
+     */
+    public int getCodigoUnidadMedida() {
+        return codigoUnidadMedida;
+    }
+
+    /**
+     * @param codigoUnidadMedida the codigoUnidadMedida to set
+     */
+    public void setCodigoUnidadMedida(int codigoUnidadMedida) {
+        this.codigoUnidadMedida = codigoUnidadMedida;
     }
 
     @Override
     public String toString() {
-        return "Ingredientes{" + "C_Ingrediente=" + C_Ingrediente + ", C_Sucursal=" + C_Sucursal + ", D_Ingrediente=" + D_Ingrediente + ", Q_Actual=" + Q_Actual + ", C_Unidad_Medida=" + C_Unidad_Medida + '}';
+        return "Ingredientes{" + "codigoIngrediente=" + codigoIngrediente + ", codigoSucursal=" + codigoSucursal + ", codigoProveedor=" + codigoProveedor + ", nombreIngrediente=" + nombreIngrediente + ", cantidad=" + cantidad + ", codigoUnidadMedida=" + codigoUnidadMedida + '}';
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 }

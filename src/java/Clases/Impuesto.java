@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package clasesaauxiliar;
+package Clases;
 
 /**
  *
@@ -10,10 +10,11 @@ package clasesaauxiliar;
  */
 public class Impuesto {
     private int C_Impuesto;
-    
-   private String D_Impuesto;
-    
+    private String D_Impuesto;
     private int D_Procentaje_Impuesto;
+
+    public Impuesto() {
+    }
 
     public Impuesto(int C_Impuesto, String D_Impuesto, int D_Procentaje_Impuesto) {
         this.C_Impuesto = C_Impuesto;
@@ -67,11 +68,7 @@ public class Impuesto {
     public String toString() {
         return "Impuesto{" + "C_Impuesto=" + C_Impuesto + ", D_Impuesto=" + D_Impuesto + ", D_Procentaje_Impuesto=" + D_Procentaje_Impuesto + '}';
     }
-    
-    
-    
-    
-    
-    
-    
+
+   
+     
 }
