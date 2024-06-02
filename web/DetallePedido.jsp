@@ -25,7 +25,7 @@
                 <button type="submit" class="btn btn-primary">Nuevo Pedido</button>
         </div>
         </form>
-         
+   
             <%
 
                 Conexion sql = new Conexion();
@@ -62,7 +62,13 @@
                                     type="text" 
                                     name="delete" 
                                     id="id" 
-                                    value="<%=list.get(i).getCodigoProducto()%>">
+                                    value="<%=list.get(i).getCodigoDetallePedido()%>">
+                                 <input 
+                                    hidden="true"
+                                    type="text" 
+                                    name="codigoPedido" 
+                                    id="id" 
+                                    value="<%=codigoPedido%>">
                                 <input                                        
                                     class="btn btn-danger btn-sm" 
                                     type="submit"                                                                              
@@ -74,7 +80,7 @@
                                     type="text" 
                                     name="update" 
                                     id="id" 
-                                    value="<%=list.get(i).getCodigoProducto()%>">
+                                    value="<%=list.get(i).getCodigoDetallePedido()%>">
                                 <input                                        
                                     class="btn btn-info btn-sm" 
                                     type="submit"                                                                              
@@ -83,7 +89,14 @@
                         </td>
                     </tr>
                     <%}%>
+                    
                 </tbody>
             </table>
+                    <form action="NewFactura.jsp">
+         <input  type="text" hidden class="form-control" name="codigoPedido" value=<%=codigoPedido%> required Style ="width: 40%" >
+        <div style="float: left; margin-top: 25px">
+                <button type="submit" class="btn btn-primary">Crear Factura</button>
+        </div>
+        </form>
     </body>
 </html>
