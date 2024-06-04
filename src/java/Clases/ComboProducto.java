@@ -9,7 +9,48 @@ package Clases;
  * @author Hp EliteBook
  */
 public class ComboProducto {
-    int codigoProducto;
-    int codigoCombo;
+    private int codigoProducto;
+    private int codigoCombo;
+
+    public ComboProducto() {
+    }
+
+    public ComboProducto(int codigoProducto, int codigoCombo) {
+        this.codigoProducto = codigoProducto;
+        this.codigoCombo = codigoCombo;
+    }
+
+    /**
+     * @return the codigoProducto
+     */
+    public int getCodigoProducto() {
+        return codigoProducto;
+    }
+
+    /**
+     * @param codigoProducto the codigoProducto to set
+     */
+    public void setCodigoProducto(int codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
+    /**
+     * @return the codigoCombo
+     */
+    public int getCodigoCombo() {
+        return codigoCombo;
+    }
+
+    /**
+     * @param codigoCombo the codigoCombo to set
+     */
+    public void setCodigoCombo(int codigoCombo) {
+        this.codigoCombo = codigoCombo;
+    }
+
+    @Override
+    public String toString() {
+        return "ComboProducto{" + "codigoProducto=" + codigoProducto + ", codigoCombo=" + codigoCombo + '}';
+    }
     
 }

@@ -10,6 +10,7 @@ import Clases.Canton;
 import Clases.Cliente;
 import Clases.ClientesSucursales;
 import Clases.Combo;
+import Clases.ComboProducto;
 import Clases.DetallePedido;
 import Clases.DireccionFisica;
 import Clases.Distrito;
@@ -36,6 +37,7 @@ import Clases.Sucursal;
 import Clases.TipoProducto;
 import Clases.UnidadMedida;
 import Clases.Vacaciones;
+import Clases.VerFactura;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -58,7 +60,7 @@ public class Conexion {
     public static Connection getConexion() {
         String conexionUrl = "jdbc:sqlserver://localhost:1433;"
                 + "database=Pegadero_Mula;user=admin;"
-                + "password=root2;loginTimeout=30;"
+                + "password=root;loginTimeout=30;"
                 + "trustServerCertificate=true";
         try {
             // Registrar el driver explícitamente
@@ -1981,16 +1983,16 @@ public class Conexion {
         }
     }
 
-   public ArrayList<DetallePedido> seleccionarDetallesPedido(int cPedido) {
+    public ArrayList<DetallePedido> seleccionarDetallesPedido(int cPedido) {
         ArrayList<DetallePedido> detallesPedido = new ArrayList<>();
         String procedimiento = "{call SP_Seleccionar_Detalles_Pedido(?)}";
 
         try (Connection con = Conexion.getConexion();
-             CallableStatement stmt = con.prepareCall(procedimiento)) {
-            
+                CallableStatement stmt = con.prepareCall(procedimiento)) {
+
             // Establecer el parámetro del procedimiento almacenado
             stmt.setInt(1, cPedido);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int cDetallePedido = rs.getInt("C_Detalle_Pedido");
@@ -1998,7 +2000,7 @@ public class Conexion {
                     String nombreProducto = rs.getString("D_Producto");
                     byte qPedido = rs.getByte("Q_Pedido");
                     double mTotal = rs.getDouble("M_Total");
-                    
+
                     DetallePedido detallePedido = new DetallePedido(cDetallePedido, cPedido, cProducto, nombreProducto, qPedido, mTotal);
                     detallesPedido.add(detallePedido);
                 }
@@ -2515,107 +2517,111 @@ public class Conexion {
             return false; // Indicar que la actualización falló
         }
     }
+
     public ArrayList<Impuesto> obtenerImpuestos() {
-    ArrayList<Impuesto> impuestos = new ArrayList<>();
-    try (Connection con = getConexion();
-            CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Impuesto()}")) {
+        ArrayList<Impuesto> impuestos = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Impuesto()}")) {
 
-        // Ejecutar el procedimiento almacenado
-        ResultSet rs = stmt.executeQuery();
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
 
-        // Iterar sobre los resultados y agregar los registros de impuestos a la lista
-        while (rs.next()) {
-            int cImpuesto = rs.getInt("C_Impuesto");
-            String dImpuesto = rs.getString("D_Impuesto");
-            int dProcentajeImpuesto = rs.getInt("D_Procentaje_Impuesto");
+            // Iterar sobre los resultados y agregar los registros de impuestos a la lista
+            while (rs.next()) {
+                int cImpuesto = rs.getInt("C_Impuesto");
+                String dImpuesto = rs.getString("D_Impuesto");
+                int dProcentajeImpuesto = rs.getInt("D_Procentaje_Impuesto");
 
-            Impuesto impuesto = new Impuesto(cImpuesto, dImpuesto, dProcentajeImpuesto);
-            impuestos.add(impuesto);
+                Impuesto impuesto = new Impuesto(cImpuesto, dImpuesto, dProcentajeImpuesto);
+                impuestos.add(impuesto);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los impuestos: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("Error al obtener los impuestos: " + e.getMessage());
+        return impuestos;
     }
-    return impuestos;
-}
+
     public boolean eliminarImpuesto(int cImpuesto) {
-    try (Connection con = getConexion();
-            CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Impuesto(?)}")) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Impuesto(?)}")) {
 
-        // Establecer el parámetro del procedimiento almacenado
-        stmt.setInt(1, cImpuesto);
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cImpuesto);
 
-        // Ejecutar el procedimiento almacenado
-        stmt.execute();
-        return true; // Indicar que la eliminación fue exitosa
-    } catch (SQLException e) {
-        System.out.println("Error al eliminar impuesto: " + e.getMessage());
-        return false; // Indicar que la eliminación falló
-    }
-}
-public boolean actualizarImpuesto(int cImpuesto, String dImpuesto, int dProcentajeImpuesto) {
-    try (Connection con = getConexion();
-            CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Impuesto(?, ?, ?)}")) {
-
-        // Establecer los parámetros del procedimiento almacenado
-        stmt.setInt(1, cImpuesto);
-        stmt.setString(2, dImpuesto);
-        stmt.setInt(3, dProcentajeImpuesto);
-
-        // Ejecutar el procedimiento almacenado
-        stmt.execute();
-        return true; // Indicar que la actualización fue exitosa
-    } catch (SQLException e) {
-        System.out.println("Error al actualizar impuesto: " + e.getMessage());
-        return false; // Indicar que la actualización falló
-    }
-}
-
-public boolean insertarImpuesto(String dImpuesto, int dProcentajeImpuesto) {
-    try (Connection con = getConexion();
-            CallableStatement stmt = con.prepareCall("{call SP_Insertar_Impuesto(?, ?)}")) {
-
-        // Establecer los parámetros del procedimiento almacenado
-        stmt.setString(1, dImpuesto);
-        stmt.setInt(2, dProcentajeImpuesto);
-
-        // Ejecutar el procedimiento almacenado
-        stmt.execute();
-        return true; // Indicar que la inserción fue exitosa
-    } catch (SQLException e) {
-        System.out.println("Error al insertar impuesto: " + e.getMessage());
-        return false; // Indicar que la inserción falló
-    }
-}
-
-public ArrayList<Factura> obtenerFacturas() {
-    ArrayList<Factura> facturas = new ArrayList<>();
-    try (Connection con = getConexion();
-         CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Factura()}")) {
-
-        // Ejecutar el procedimiento almacenado
-        ResultSet rs = stmt.executeQuery();
-
-        // Iterar sobre los resultados y agregar los registros de facturas a la lista
-        while (rs.next()) {
-            int cFactura = rs.getInt("C_Factura");
-            int cPedido = rs.getInt("C_Pedido");
-            int cMetodoPago = rs.getInt("C_Metodo_Pago");
-            int cSucursal = rs.getInt("C_Sucursal");
-            int cImpuesto = rs.getInt("C_Impuesto");
-            Timestamp fFactura = rs.getTimestamp("F_Factura");
-            double mTotal = rs.getDouble("M_Total");
-
-            Factura factura = new Factura(cFactura, cPedido, cMetodoPago, cSucursal, cImpuesto, fFactura, mTotal);
-            facturas.add(factura);
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar impuesto: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
         }
-    } catch (SQLException e) {
-        System.out.println("Error al obtener las facturas: " + e.getMessage());
     }
-    return facturas;
-}
-public boolean insertarFactura(int cPedido, int cMetodoPago, int cSucursal, int cImpuesto) {
+
+    public boolean actualizarImpuesto(int cImpuesto, String dImpuesto, int dProcentajeImpuesto) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Impuesto(?, ?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cImpuesto);
+            stmt.setString(2, dImpuesto);
+            stmt.setInt(3, dProcentajeImpuesto);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar impuesto: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
+    }
+
+    public boolean insertarImpuesto(String dImpuesto, int dProcentajeImpuesto) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Impuesto(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setString(1, dImpuesto);
+            stmt.setInt(2, dProcentajeImpuesto);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar impuesto: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public ArrayList<Factura> obtenerFacturas() {
+        ArrayList<Factura> facturas = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Factura()}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar los registros de facturas a la lista
+            while (rs.next()) {
+                int cFactura = rs.getInt("C_Factura");
+                int cPedido = rs.getInt("C_Pedido");
+                int cMetodoPago = rs.getInt("C_Metodo_Pago");
+                int cSucursal = rs.getInt("C_Sucursal");
+                int cImpuesto = rs.getInt("C_Impuesto");
+                Timestamp fFactura = rs.getTimestamp("F_Factura");
+                double mTotal = rs.getDouble("M_Total");
+
+                Factura factura = new Factura(cFactura, cPedido, cMetodoPago, cSucursal, cImpuesto, fFactura, mTotal);
+                facturas.add(factura);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener las facturas: " + e.getMessage());
+        }
+        return facturas;
+    }
+
+    public int insertarFactura(int cPedido, int cMetodoPago, int cSucursal, int cImpuesto) {
     try (Connection con = getConexion();
-         CallableStatement stmt = con.prepareCall("{call SP_Insertar_Factura(?, ?, ?, ?)}")) {
+         CallableStatement stmt = con.prepareCall("{call SP_Insertar_Factura(?, ?, ?, ?, ?)}")) {
 
         // Establecer los parámetros del procedimiento almacenado
         stmt.setInt(1, cPedido);
@@ -2623,49 +2629,125 @@ public boolean insertarFactura(int cPedido, int cMetodoPago, int cSucursal, int 
         stmt.setInt(3, cSucursal);
         stmt.setInt(4, cImpuesto);
         
-
+       stmt.registerOutParameter(5, java.sql.Types.INTEGER);
         // Ejecutar el procedimiento almacenado
         stmt.execute();
-        return true; // Indicar que la inserción fue exitosa
+         int codigoFactura = stmt.getInt(5);
+        return codigoFactura; // Indicar que la inserción fue exitosa
     } catch (SQLException e) {
         System.out.println("Error al insertar factura: " + e.getMessage());
-        return false; // Indicar que la inserción falló
+        return -1; // Indicar que la inserción falló
     }
 }
-public boolean eliminarFactura(int cFactura) {
-    try (Connection con = getConexion();
-         CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Factura(?)}")) {
 
-        // Establecer el parámetro del procedimiento almacenado
-        stmt.setInt(1, cFactura);
+    public boolean eliminarFactura(int cFactura) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Factura(?)}")) {
 
-        // Ejecutar el procedimiento almacenado
-        stmt.execute();
-        return true; // Indicar que la eliminación fue exitosa
-    } catch (SQLException e) {
-        System.out.println("Error al eliminar factura: " + e.getMessage());
-        return false; // Indicar que la eliminación falló
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cFactura);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar factura: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
+        }
     }
-}
-public boolean actualizarFactura(int cFactura, int cPedido, int cMetodoPago, int cSucursal, int cImpuesto, Date fFactura) {
-    try (Connection con = getConexion();
-         CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Factura(?, ?, ?, ?, ?, ?)}")) {
 
-        // Establecer los parámetros del procedimiento almacenado
-        stmt.setInt(1, cFactura);
-        stmt.setInt(2, cPedido);
-        stmt.setInt(3, cMetodoPago);
-        stmt.setInt(4, cSucursal);
-        stmt.setInt(5, cImpuesto);
-        stmt.setTimestamp(6, new java.sql.Timestamp(fFactura.getTime()));
+    public boolean actualizarFactura(int cFactura, int cPedido, int cMetodoPago, int cSucursal, int cImpuesto, Date fFactura) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Actualizar_Factura(?, ?, ?, ?, ?, ?)}")) {
 
-        // Ejecutar el procedimiento almacenado
-        stmt.execute();
-        return true; // Indicar que la actualización fue exitosa
-    } catch (SQLException e) {
-        System.out.println("Error al actualizar factura: " + e.getMessage());
-        return false; // Indicar que la actualización falló
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cFactura);
+            stmt.setInt(2, cPedido);
+            stmt.setInt(3, cMetodoPago);
+            stmt.setInt(4, cSucursal);
+            stmt.setInt(5, cImpuesto);
+            stmt.setTimestamp(6, new java.sql.Timestamp(fFactura.getTime()));
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la actualización fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar factura: " + e.getMessage());
+            return false; // Indicar que la actualización falló
+        }
     }
-}
+
+    public ArrayList<ComboProducto> obtenerCombosProductos() {
+        ArrayList<ComboProducto> combosProductos = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Seleccionar_Combos_Productos()}")) {
+
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar las combinaciones de productos a la lista
+            while (rs.next()) {
+                int cCombo = rs.getInt("C_Combo");
+                int cProducto = rs.getInt("C_Producto");
+
+                ComboProducto comboProducto = new ComboProducto(cCombo, cProducto);
+                combosProductos.add(comboProducto);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener las combinaciones de productos: " + e.getMessage());
+        }
+        return combosProductos;
+    }
+
+    public boolean insertarComboProducto(int cCombo, int cProducto) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Insertar_Combos_Productos(?, ?)}")) {
+
+            // Establecer los parámetros del procedimiento almacenado
+            stmt.setInt(1, cCombo);
+            stmt.setInt(2, cProducto);
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la inserción fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al insertar combinación de producto: " + e.getMessage());
+            return false; // Indicar que la inserción falló
+        }
+    }
+
+    public ArrayList<VerFactura> obtenerDatosFacturas(int codigoFactura) {
+        ArrayList<VerFactura> datosFacturas = new ArrayList<>();
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Ver_Factura(?)}")) {
+            stmt.setInt(1, codigoFactura);
+            // Ejecutar el procedimiento almacenado
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterar sobre los resultados y agregar los registros de facturas a la lista
+            while (rs.next()) {
+                String dDireccionFisica = rs.getString("D_Direccion_Fisica");
+                String dSucursal = rs.getString("D_Sucursal");
+                String nTelefono = rs.getString("N_Telefono");
+                String dCorreoElectronico = rs.getString("D_Correo_Electronico");
+                int cFactura = rs.getInt("C_Factura");
+                Timestamp fFactura = rs.getTimestamp("F_Factura");
+                String dNombreCompleto = rs.getString("D_Nombre_Completo");
+                int cPedido = rs.getInt("C_Pedido");
+                String dImpuesto = rs.getString("D_Impuesto");
+                double qImpuesto = rs.getDouble("Q_Impuesto");
+                double mTotalI = rs.getDouble("M_Total_I");
+
+                VerFactura datosfactura = new VerFactura(dDireccionFisica, dSucursal, nTelefono, dCorreoElectronico, cFactura,
+                        fFactura, dNombreCompleto, cPedido, dImpuesto, qImpuesto, mTotalI);
+                datosFacturas.add(datosfactura);
+
+                System.out.println("Direccion" + dDireccionFisica);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los datos de facturas: " + e.getMessage());
+        }
+        return datosFacturas;
+    }
 
 }

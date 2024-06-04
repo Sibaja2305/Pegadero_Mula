@@ -20,11 +20,13 @@
     
     
  
+int codigoFactura = sql.insertarFactura(codigoPedido, metodo, sucursal, impuesto);
 
-    if (sql.insertarFactura(codigoPedido, metodo, sucursal, impuesto)) {
-        response.sendRedirect("Factura.jsp");
+    if (codigoPedido != -1) { // Suponiendo que -1 indica que no se insertó correctamente
+        response.sendRedirect("VerFactura.jsp?codigoFactura=" + codigoFactura);
+        System.out.println("codigo" + codigoFactura);
     } else {
-        out.println("<script>alert('no se inserto'); window.location.href='NewFactura.jsp?codigoPedido=" + codigoPedido + "';</script>");
+        out.println("<script>alert('No se pudo insertar el pedido'); window.location.href='NewFactura.jsp';</script>"); 
     }
 
 %>
