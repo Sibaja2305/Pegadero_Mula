@@ -12,16 +12,16 @@ package Clases;
 public class Cliente {
     private int C_Cliente;
     private int C_Direccion_Fisica;
-    private String C_Cedula;
+    private int C_Persona;
     private String N_Numero_Telefono;
 
     public Cliente() {
     }
 
-    public Cliente(int C_Cliente, int C_Direccion_Fisica, String C_Cedula, String N_Numero_Telefono) {
+    public Cliente(int C_Cliente, int C_Direccion_Fisica, int C_Persona, String N_Numero_Telefono) {
         this.C_Cliente = C_Cliente;
         this.C_Direccion_Fisica = C_Direccion_Fisica;
-        this.C_Cedula = C_Cedula;
+        this.C_Persona = C_Persona;
         this.N_Numero_Telefono = N_Numero_Telefono;
     }
 
@@ -54,17 +54,17 @@ public class Cliente {
     }
 
     /**
-     * @return the C_Cedula
+     * @return the C_Persona
      */
-    public String getC_Cedula() {
-        return C_Cedula;
+    public int getC_Persona() {
+        return C_Persona;
     }
 
     /**
-     * @param C_Cedula the C_Cedula to set
+     * @param C_Persona the C_Persona to set
      */
-    public void setC_Cedula(String C_Cedula) {
-        this.C_Cedula = C_Cedula;
+    public void setC_Persona(int C_Persona) {
+        this.C_Persona = C_Persona;
     }
 
     /**
@@ -83,9 +83,13 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Clientes{" + "C_Cliente=" + C_Cliente + ", C_Direccion_Fisica=" +
-                C_Direccion_Fisica + ", C_Cedula=" + C_Cedula + ", N_Numero_Telefono=" + N_Numero_Telefono + '}';
+        return "Cliente{" + "C_Cliente=" + C_Cliente 
+                + ", C_Direccion_Fisica=" + C_Direccion_Fisica 
+                + ", C_Persona=" + C_Persona + ", N_Numero_Telefono=" 
+                + N_Numero_Telefono + '}';
     }
+
+   
 
    
 

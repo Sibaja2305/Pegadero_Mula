@@ -16,6 +16,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -23,7 +24,8 @@
             <div>
                 <h1 class="Title">insertar Pedido</h1>
             </div>
-            
+        <div class="form-group">
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione la Mesa:</label>
             <select name="mesa">
                 <option name="mesa" value="<%= "0" %>">Null</option>
                 <%
@@ -37,6 +39,9 @@
                     }
                 %>
             </select>
+        </div>
+            <div class="form-group">
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione el empleado:</label>
              <select name="empleado">
                 <%
                    
@@ -48,7 +53,9 @@
                     }
                 %>
             </select>
-            
+            </div>
+            <div class="form-group">
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione el express:</label>
              <select name="express">
                   <option name="express" value="<%= "0" %>">Null</option>
                 <%
@@ -62,6 +69,9 @@
                     }
                 %>
             </select>
+            </div>
+            <div class="form-group">
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione el cliente:</label>
              <select name="cliente">
                 <%
                   
@@ -73,6 +83,9 @@
                     }
                 %>
             </select>
+            </div>
+            <div class="form-group">
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione la sucursal:</label>
              <select name="sucursal">
                 <%
                   
@@ -84,7 +97,7 @@
                     }
                 %>
             </select>
-           
+            </div>
             <div class="form-group">
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha:</label>
                 <input type="time" id="nombre" class="form-control" name="horaSolicitud" required Style =" width: 40%">

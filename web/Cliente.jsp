@@ -45,7 +45,7 @@
                     <tr>
                         <td class="align-middle text-center"><%=list.get(i).getC_Cliente() %></td>
                         <td class="align-middle text-center"><%=list.get(i).getC_Direccion_Fisica() %></td>
-                        <td class="align-middle text-center"><%=list.get(i).getC_Cedula() %></td>
+                        <td class="align-middle text-center"><%=list.get(i).getC_Persona()%></td>
                         <td class="align-middle text-center"><%=list.get(i).getN_Numero_Telefono()%></td>
                         <td class="text-center">
                             <form action="EliminarCliente.jsp" id="deleteForm" method="post">

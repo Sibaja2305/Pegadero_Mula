@@ -1351,10 +1351,10 @@ public class Conexion {
             while (rs.next()) {
                 int cCliente = rs.getInt("C_Cliente");
                 int cDireccionFisica = rs.getInt("C_Direccion_Fisica");
-                String cCedula = rs.getString("C_Cedula");
+                int cPersona = rs.getInt("C_Persona");
                 String nNumeroTelefono = rs.getString("N_Numero_Telefono");
 
-                Cliente cliente = new Cliente(cCliente, cDireccionFisica, cCedula, nNumeroTelefono);
+                Cliente cliente = new Cliente(cCliente, cDireccionFisica, cPersona, nNumeroTelefono);
                 clientes.add(cliente);
             }
         } catch (SQLException e) {
@@ -1363,13 +1363,13 @@ public class Conexion {
         return clientes;
     }
 
-    public boolean insertarCliente(int cDireccionFisica, String cCedula, String nNumeroTelefono) {
+    public boolean insertarCliente(int cDireccionFisica, int cPersona, String nNumeroTelefono) {
         try (Connection con = getConexion();
                 CallableStatement stmt = con.prepareCall("{call SP_Insertar_Cliente(?, ?, ?)}")) {
 
             // Establecer los parámetros del procedimiento almacenado
             stmt.setInt(1, cDireccionFisica);
-            stmt.setString(2, cCedula);
+            stmt.setInt(2, cPersona);
             stmt.setString(3, nNumeroTelefono);
 
             // Ejecutar el procedimiento almacenado

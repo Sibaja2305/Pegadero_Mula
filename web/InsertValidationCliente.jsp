@@ -12,7 +12,7 @@
 Conexion sql = new Conexion();
 
 int direccion = Integer.parseInt(request.getParameter("direccion"));
-String cedula = request.getParameter("cedula");
+int cedula = Integer.parseInt(request.getParameter("cedula"));
 String numero = request.getParameter("numero");
 
 if (sql.insertarCliente(direccion, cedula, numero)) {
