@@ -22,6 +22,7 @@
             <div>
                 <h1 class="Title">insertar</h1>
             </div>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Ingrediente:</label>
             <select name="ingrediente">
                 <%
                     Conexion sql = new Conexion();
@@ -33,7 +34,7 @@
                     }
                 %>
             </select>
-           
+           <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Producto:</label>
               <select name="producto">
                 <%
                     

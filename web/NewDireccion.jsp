@@ -12,6 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>Nueva Direccion</title>
     </head>
     <body>
@@ -23,6 +24,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite la direccion:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="Direccion" required Style =" width: 40%">
             </div>
+             <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione el Distrito:</label>
             <select name="direccion">
                 <%
                     Conexion sql = new Conexion();

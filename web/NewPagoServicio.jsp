@@ -13,14 +13,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
      <body>
     <form style="margin-left: 10px"  action= "InsertValidationPagoServicio.jsp" method="post">
             <div>
-                <h1 class="Title">insertar nuevo servicio</h1>
+                <h1 class="Title">insertar nuevo pago servicio</h1>
             </div>
-            
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione el servicio:</label>
             <select name="servicio">
                 <%
                     Conexion sql = new Conexion();
@@ -32,6 +33,7 @@
                     }
                 %>
             </select>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione la sucursal:</label>
             <select name="sucursal">
                 <%
                     

@@ -60,7 +60,7 @@ public class Conexion {
 
     public static Connection getConexion() {
         String conexionUrl = "jdbc:sqlserver://localhost:1433;"
-                + "database=Pegadero_Mula;user=admin;"
+                + "database=Pegadero_Mula;user=sibaja;"
                 + "password=root2;loginTimeout=30;"
                 + "trustServerCertificate=true";
         try {
@@ -922,14 +922,19 @@ public class Conexion {
         return empleados; // Devolver la lista de empleados
     }
 
-    public boolean insertarEmpleado(int cRolEmpleado, int cHorasExtra, int cSucursal, String dIdentificacion, String dNombre,
+    public boolean insertarEmpleado(int cRolEmpleado, Integer cHorasExtra, int cSucursal, String dIdentificacion, String dNombre,
             String dPrimerApellido, String dSegundoApellido, double mSalario) {
         try (Connection con = getConexion();
                 CallableStatement stmt = con.prepareCall("{call SP_Insertar_Empleado(?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
             // Establecer los parámetros del procedimiento almacenado
             stmt.setInt(1, cRolEmpleado);
-            stmt.setInt(2, cHorasExtra);
+            if (cHorasExtra != null) {
+                stmt.setInt(2, cHorasExtra);
+            } else {
+                stmt.setNull(2, java.sql.Types.TINYINT);
+            }
+            
             stmt.setInt(3, cSucursal);
             stmt.setString(4, dIdentificacion);
             stmt.setString(5, dNombre);
@@ -2061,7 +2066,7 @@ public class Conexion {
             while (rs.next()) {
                 int cIngredientes = rs.getInt("C_Ingredientes");
                 int cProductos = rs.getInt("C_Productos");
-                int qConsumo = rs.getInt("Q_Consumo");
+                double qConsumo = rs.getDouble("Q_Consumo");
                 int cUnidadMedida = rs.getInt("C_Unidad_Medida");
 
                 ProductoIngrediente productoIngrediente = new ProductoIngrediente(cIngredientes, cProductos, qConsumo, cUnidadMedida);
@@ -2691,7 +2696,7 @@ public class Conexion {
                 int cCombo = rs.getInt("C_Combo");
                 int cProducto = rs.getInt("C_Producto");
 
-                ComboProducto comboProducto = new ComboProducto(cCombo, cProducto);
+                ComboProducto comboProducto = new ComboProducto(cProducto,cCombo);
                 combosProductos.add(comboProducto);
             }
         } catch (SQLException e) {
@@ -2714,6 +2719,22 @@ public class Conexion {
         } catch (SQLException e) {
             System.out.println("Error al insertar combinación de producto: " + e.getMessage());
             return false; // Indicar que la inserción falló
+        }
+    }
+    public boolean eliminarComboProducto(int cCombo,int cProducto) {
+        try (Connection con = getConexion();
+                CallableStatement stmt = con.prepareCall("{call SP_Eliminar_Combos_Productos(?, ?)}")) {
+
+            // Establecer el parámetro del procedimiento almacenado
+            stmt.setInt(1, cCombo);
+            stmt.setInt(2,cProducto );
+
+            // Ejecutar el procedimiento almacenado
+            stmt.execute();
+            return true; // Indicar que la eliminación fue exitosa
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar Combo: " + e.getMessage());
+            return false; // Indicar que la eliminación falló
         }
     }
 

@@ -10,7 +10,7 @@
     <head>
          
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
        
     </head>
@@ -31,7 +31,7 @@
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="servicio" required Style =" width: 40%">
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha vencimiento::</label>
                 <input type="date" id="nombre" class="form-control" name="fecha" required Style =" width: 40%">
             </div>
            

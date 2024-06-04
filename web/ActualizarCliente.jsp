@@ -14,6 +14,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -35,6 +36,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el numero de telefono:</label>
                 <input type="text" id="nombre" class="form-control" name="numero" placeholder="nueva numero de telefono" required Style =" width: 40%">
             </div>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Direccion:</label>
             <select name="direccion">
                 <%
                     Conexion sql = new Conexion();

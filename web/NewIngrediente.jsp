@@ -14,6 +14,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
      <body>
@@ -21,6 +22,7 @@
             <div>
                 <h1 class="Title">insertar nuevo ingrediente</h1>
             </div>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Sucursal:</label>
               <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
@@ -32,6 +34,7 @@
                     }
                 %>
               </select>
+              <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Proveedor</label>
                  <select name="proveedor">
                 <%
                     
@@ -51,6 +54,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Cantidad:</label>
                 <input type="Number" id="text" class="form-control" name="actual"  required style="width: 40%">
             </div>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Unidad de medida</label>
              <select name="unidad">
                 <%
                     

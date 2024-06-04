@@ -12,6 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -23,17 +24,21 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el nombre del canton:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="nombre canton" required Style =" width: 40%">
             </div>
+            <div>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el nombre del Provincia:</label>
             <select name="provincia">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Provincia> provincias = sql.getProvincias(); // Método que obtiene las provincias desde la base de datos
                     for (Provincia provincia : provincias) {
                 %>
-                <option name="provincia" value="<%= provincia.getCodigoProvincia()%>"><%= provincia.getNombreProvincia()%></option>
+                <option name="provincia" value="<%= provincia.getCodigoProvincia() %>"><%= provincia.getNombreProvincia()%></option>
                 <%
                     }
                 %>
             </select>
+            </div>
+            
 
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>

@@ -9,6 +9,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="conexion.Conexion"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <!DOCTYPE html>
 <html>
     <head>

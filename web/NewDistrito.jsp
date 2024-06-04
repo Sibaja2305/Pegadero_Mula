@@ -13,7 +13,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>NuevoDistrito</title>
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <title>Nuevo Distrito</title>
     </head>
     <body>
         <form style="margin-left: 10px"  action= "InsertValidationDistrito.jsp" method="post">
@@ -24,6 +25,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el nombre del Distrito:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="nombre distrito" required Style =" width: 40%">
             </div>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione el Canton:</label>
             <select name="canton">
                 <%
                     Conexion sql = new Conexion();

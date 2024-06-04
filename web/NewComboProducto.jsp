@@ -16,6 +16,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -24,26 +25,26 @@
                 <h1 class="Title">Insertar Combo Producto</h1>
             </div>
             
-            
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Combo:</label>
             <select name="combo">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Combo> combos = sql.seleccionarCombos(); // Método que obtiene las provincias desde la base de datos
                     for (Combo combo : combos) {
                 %>
-                <option name="combo" value="<%= combo.getCodigoCombo()%>"><%= combo.getCodigoCombo()%></option>
+                <option name="combo" value="<%= combo.getCodigoCombo()%>"><%= combo.getNombreCombo() %></option>
                 <%
                     }
                 %>
             </select>
-           
+           <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Producto:</label>
             <select name="producto">
                 <%
                     
                     ArrayList<Producto> productos = sql.seleccionarProductos(); // Método que obtiene las provincias desde la base de datos
                     for (Producto producto : productos) {
                 %>
-                <option name="producto" value="<%= producto.getCodigoProducto()%>"><%= producto.getCodigoProducto()%></option>
+                <option name="producto" value="<%= producto.getCodigoProducto()%>"><%= producto.getNombreProducto() %></option>
                 <%
                     }
                 %>

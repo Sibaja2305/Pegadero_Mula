@@ -14,6 +14,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -22,7 +23,7 @@
                 <h1 class="Title">insertar nuevo empleado</h1>
             </div>
 
-
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Sucursal:</label>
             <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
@@ -34,6 +35,7 @@
                     }
                 %>
             </select>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Rol del empleado:</label>
             <select name="rol">
                 <%
                     ArrayList<RolEmpleado> roles = sql.getRolesEmpleado();
@@ -44,12 +46,14 @@
                     }
                 %>
             </select>
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Horas Extras:</label>
             <select name="horas">
+                <option value="">Seleccione una opción</option>
                 <%
                     ArrayList<HorasExtras> horas = sql.getHorasExtra();
                     for (HorasExtras hora : horas) {
                 %>
-                <option name="horas" value="<%= hora.getCodigoHoraExtra()%>"><%= hora.getCantidadHoras()%></option>
+                <option value="<%= hora.getCodigoHoraExtra()%>"><%= hora.getCantidadHoras()%></option>
                 <%
                     }
                 %>

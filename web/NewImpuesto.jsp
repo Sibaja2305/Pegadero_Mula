@@ -12,6 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -26,7 +27,7 @@
                 <input type="text" id="nombre" class="form-control" name="nombreImpuesto" placeholder="Nombre" required style="width: 40%">
             </div>
              <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite el pporcentaje:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite el porcentaje:</label>
                 <input type="number" id="porcentaje" class="form-control" name="porcentaje" placeholder="0" required style="width: 40%">
             </div>
            

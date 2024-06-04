@@ -12,6 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -19,7 +20,7 @@
             <div>
                 <h1 class="Title">insertar Caja</h1>
             </div>
-            
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione la sucursal:</label>
             <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
@@ -32,19 +33,19 @@
                 %>
             </select>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la sucursal:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Monto Inicial:</label>
                 <input type="number" id="monto" class="form-control" name="montoInicial" placeholder="0" required style="width: 40%">
             </div>
              <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la sucursal:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Monto de cierre de caja:</label>
                 <input type="number" id="monto" class="form-control" name="montoFinal" placeholder="0" required style="width: 40%">
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la hora de apertura:</label>
                 <input type="time" id="nombre" class="form-control" name="horaApertura" required Style =" width: 40%">
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la hora de cierre:</label>
                 <input type="time" id="nombre" class="form-control" name="horaCierre" required Style =" width: 40%">
             </div>
             <div class="form-group">

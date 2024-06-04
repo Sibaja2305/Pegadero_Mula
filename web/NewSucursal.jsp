@@ -12,6 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -31,6 +32,8 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite el correo:</label>
                 <input type="text" id="nombre" class="form-control" name="correo" placeholder="example@gmail.com" required Style =" width: 40%">
             </div>
+             <div class="form-group">
+            <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione la direccion:</label>
             <select name="direccion">
                 <%
                     Conexion sql = new Conexion();
@@ -42,7 +45,7 @@
                     }
                 %>
             </select>
-
+             </div>
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

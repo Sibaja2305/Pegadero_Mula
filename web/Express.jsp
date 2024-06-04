@@ -14,6 +14,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -68,7 +69,7 @@
                                     id="id" 
                                     value="<%=list.get(i).getC_Express() %>">
                                 <input                                        
-                                    class="btn btn-danger btn-sm" 
+                                    class="btn btn-info btn-sm" 
                                     type="submit"                                                                              
                                     value="actualizar" >
                             </form>
