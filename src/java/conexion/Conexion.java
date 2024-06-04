@@ -8,6 +8,7 @@ import Clases.Bonificacion;
 import Clases.Caja;
 import Clases.Canton;
 import Clases.Cliente;
+import Clases.ClienteBusqueda;
 import Clases.ClientesSucursales;
 import Clases.Combo;
 import Clases.ComboProducto;
@@ -60,7 +61,7 @@ public class Conexion {
     public static Connection getConexion() {
         String conexionUrl = "jdbc:sqlserver://localhost:1433;"
                 + "database=Pegadero_Mula;user=admin;"
-                + "password=root;loginTimeout=30;"
+                + "password=root2;loginTimeout=30;"
                 + "trustServerCertificate=true";
         try {
             // Registrar el driver explícitamente
@@ -77,34 +78,34 @@ public class Conexion {
         }
     }
 
-//    public static ArrayList<Cliente> busqueda(String criterioBusqueda) throws SQLException, ClassNotFoundException {
-//        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//        Connection conexion = Conexion.getConexion(); // Obtener la conexión
-//
-//        if (conexion != null) {
-//            ArrayList<Cliente> clientes = new ArrayList<>();
-//            String procedimiento = "{call SP_OBTENER_CLIENTES_BUSQUEDA(?)}";
-//
-//            try (CallableStatement llamada = conexion.prepareCall(procedimiento)) {
-//                llamada.setString(1, criterioBusqueda); // Establecer el parámetro
-//
-//                ResultSet resultado = llamada.executeQuery(); // Ejecutar el procedimiento almacenado
-//
-//                while (resultado.next()) {
-//
-//                    String nombre = resultado.getString("D_Nombre");
-//                    String primerApellido = resultado.getString("D_Primer_Apellido");
-//                    String segundoApellido = resultado.getString("D_Segundo_Apellido");
-//                    Cliente cliente = new Cliente(nombre, primerApellido, segundoApellido);
-//                    clientes.add(cliente);
-//                }
-//            }
-//
-//            return clientes; // Devolver el ArrayList de clientes
-//        }
-//
-//        return null; // En caso de conexión nula
-//    }
+    public static ArrayList<ClienteBusqueda> busqueda(String criterioBusqueda) throws SQLException, ClassNotFoundException {
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        Connection conexion = Conexion.getConexion(); // Obtener la conexión
+
+        if (conexion != null) {
+            ArrayList<ClienteBusqueda> clientes = new ArrayList<>();
+            String procedimiento = "{call SP_OBTENER_CLIENTES_BUSQUEDA(?)}";
+
+            try (CallableStatement llamada = conexion.prepareCall(procedimiento)) {
+                llamada.setString(1, criterioBusqueda); // Establecer el parámetro
+
+                ResultSet resultado = llamada.executeQuery(); // Ejecutar el procedimiento almacenado
+
+                while (resultado.next()) {
+
+                    String nombre = resultado.getString("D_Nombre");
+                    String primerApellido = resultado.getString("D_Primer_Apellido");
+                    String segundoApellido = resultado.getString("D_Segundo_Apellido");
+                    ClienteBusqueda cliente = new ClienteBusqueda(nombre, primerApellido, segundoApellido);
+                    clientes.add(cliente);
+                }
+            }
+
+            return clientes; // Devolver el ArrayList de clientes
+        }
+
+        return null; // En caso de conexión nula
+    }
     public boolean insertarProvincia(int cProvincia, String dProvincia) throws ClassNotFoundException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         try (Connection con = getConexion();

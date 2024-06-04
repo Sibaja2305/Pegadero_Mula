@@ -17,7 +17,7 @@
     </head>
     <body>
          <h1>Cliente</h1>
-         <a href="NewClientesSucursales.jsp"> <input style="margin-left: 10px; margin-bottom: 5px" type="submit" class="btn btn-success" value="nuevo" name="newUser" /> </a>
+         <a href="NewCliente.jsp"> <input style="margin-left: 10px; margin-bottom: 5px" type="submit" class="btn btn-success" value="nuevo" name="newUser" /> </a>
         <%
 
             Conexion sql = new Conexion();
