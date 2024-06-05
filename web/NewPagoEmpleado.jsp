@@ -15,6 +15,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -23,41 +24,41 @@
                 <h1 class="Title">insertar nuevo empleado</h1>
             </div>
 
-
+            <label>Empleado:</label>
             <select name="empleado">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Empleado> empleados = sql.seleccionarEmpleados();
                     for (Empleado empleado : empleados) {
                 %>
-                <option name="empleado" value="<%= empleado.getCodigoEmpleado() %>"><%= empleado.getNombre() %></option>
+                <option name="empleado" value="<%= empleado.getCodigoEmpleado()%>"><%= empleado.getNombre()%></option>
                 <%
                     }
                 %>
             </select>
-             <select name="horaExtra">
+            <label>Horas Extra:</label>
+            <select name="horaExtra">
                 <%
-                    
                     ArrayList<HorasExtras> horas = sql.getHorasExtra();
                     for (HorasExtras hora : horas) {
                 %>
-                <option name="horaExtra" value="<%= hora.getCodigoHoraExtra() %>"><%= hora.getCantidadHoras() %></option>
+                <option name="horaExtra" value="<%= hora.getCodigoHoraExtra()%>"><%= hora.getCantidadHoras()%></option>
                 <%
                     }
                 %>
             </select>
+            <label>Estado Pago</label>
             <select name="estadoPago">
                 <%
-                    
                     ArrayList<EstadoPago> estados = sql.seleccionarEstadoPago();
                     for (EstadoPago estado : estados) {
                 %>
-                <option name="estadoPago" value="<%= estado.getCodigoEstadoPago() %>"><%= estado.getEstadoPago() %></option>
+                <option name="estadoPago" value="<%= estado.getCodigoEstadoPago()%>"><%= estado.getEstadoPago()%></option>
                 <%
                     }
                 %>
             </select>
-            
+
             <div class="form-group">
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">seleccione la fecha de emision:</label>
                 <input type="date" id="text" class="form-control" name="fechaEmision"  required style="width: 40%">
@@ -74,18 +75,18 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Monto de Pago de la CCSS :</label>
                 <input type="Number" id="text" class="form-control" name="montoPagoccss"  required style="width: 40%">
             </div>
+            <label>Bonificacion</label>
             <select name="bonificacion">
                 <%
-                    
                     ArrayList<Bonificacion> bonificaciones = sql.seleccionarBonificaciones();
                     for (Bonificacion bonificacion : bonificaciones) {
                 %>
-                <option name="bonificacion" value="<%= bonificacion.getCodigoBonificacion() %>"><%= bonificacion.getMontoBonificacion() %></option>
+                <option name="bonificacion" value="<%= bonificacion.getCodigoBonificacion()%>"><%= bonificacion.getMontoBonificacion()%></option>
                 <%
                     }
                 %>
             </select>
-            
+
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

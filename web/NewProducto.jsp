@@ -20,8 +20,9 @@
     <body>
         <form style="margin-left: 10px"  action= "InsertValidationProducto.jsp" method="post">
             <div>
-                <h1 class="Title">insertar nuevo Producto</h1>
+                <h1 class="Title">Insertar Nuevo Producto</h1>
             </div>
+            <label>Sucursal</label>
             <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
@@ -33,6 +34,7 @@
                     }
                 %>
             </select>
+            <label>Combo</label>
             <select name="combo">
                 <option value="">Seleccionar Combo</option>
                 <%
@@ -42,6 +44,7 @@
                 <option value="<%= combo.getCodigoCombo()%>"><%= combo.getNombreCombo()%></option>
                 <% } %>
             </select>
+            <label>Tipo Producto</label>
               <select name="tipoProducto">
                 <%
                     
@@ -54,7 +57,7 @@
                 %>
             </select>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">nombre del producto</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Nombre del Producto:</label>
                 <input type="text" id="text" class="form-control" name="Nombre"  required style="width: 40%">
             </div>
             <div class="form-group">

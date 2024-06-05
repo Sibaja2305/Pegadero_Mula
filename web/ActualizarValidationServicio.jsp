@@ -17,7 +17,7 @@ java.util.Date utilDate = dateFormat.parse(fecha);
     // Convertir java.util.Date a java.sql.Date
     java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 if (sql.actualizarServicio(codigoServicio, nombre, sqlDate)) {
-      response.sendRedirect("Servicio.jsp");    
+      response.sendRedirect("Servicios.jsp");    
     }else{
      out.println("<script>alert('no se actualizo, hubo un error'); window.location.href='ActualizarServicio.jsp';</script>");
 }

@@ -17,7 +17,7 @@
         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
-     <body>
+    <body>
         <%int codigo = Integer.parseInt(request.getParameter("update"));%>
         <form style="margin-left: 10px"  action= "ActualizarValidationIngrediente.jsp" method="post">
             <div>
@@ -25,25 +25,25 @@
             </div>
             <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
 
-
-             <select name="sucursal">
+            <label>Sucursal</label>
+            <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Sucursal> sucursales = sql.obtenerSucursales();
                     for (Sucursal sucursal : sucursales) {
                 %>
-                <option name="sucursal" value="<%= sucursal.getCodigoSucursal() %>"><%= sucursal.getNombreSucursal() %></option>
+                <option name="sucursal" value="<%= sucursal.getCodigoSucursal()%>"><%= sucursal.getNombreSucursal()%></option>
                 <%
                     }
                 %>
-             </select>
-                 <select name="proveedor">
+            </select>
+            <label>Proveedor</label>
+            <select name="proveedor">
                 <%
-                    
                     ArrayList<Proveedor> proveedores = sql.seleccionarProveedores();
                     for (Proveedor proveedor : proveedores) {
                 %>
-                <option name="proveedor" value="<%= proveedor.getCodigoProveedor() %>"><%= proveedor.getProveedor() %></option>
+                <option name="proveedor" value="<%= proveedor.getCodigoProveedor()%>"><%= proveedor.getProveedor()%></option>
                 <%
                     }
                 %>
@@ -52,17 +52,16 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Ingrediente:</label>
                 <input type="text" id="text" class="form-control" name="Nombre"  required style="width: 40%">
             </div>
-           <div class="form-group">
+            <div class="form-group">
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Valor:</label>
                 <input type="Number" id="text" class="form-control" name="actual"  required style="width: 40%">
             </div>
-             <select name="unidad">
+            <select name="unidad">
                 <%
-                    
                     ArrayList<UnidadMedida> unidades = sql.seleccionarUnidadesMedida();
                     for (UnidadMedida unidad : unidades) {
                 %>
-                <option name="unidad" value="<%= unidad.getCodigoUnidadMedida() %>"><%=unidad.getUnidadMedidad() %></option>
+                <option name="unidad" value="<%= unidad.getCodigoUnidadMedida()%>"><%=unidad.getUnidadMedidad()%></option>
                 <%
                     }
                 %>

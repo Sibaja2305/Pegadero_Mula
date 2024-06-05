@@ -13,6 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -26,7 +27,7 @@
                 
                 <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
             </div>
-            
+            <label>Servicio</label>
             <select name="servicio">
                 <%
                     Conexion sql = new Conexion();
@@ -38,6 +39,7 @@
                     }
                 %>
             </select>
+            <label>Sucursal</label>
             <select name="sucursal">
                 <%
                     

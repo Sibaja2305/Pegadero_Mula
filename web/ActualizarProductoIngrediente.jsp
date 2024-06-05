@@ -32,12 +32,14 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">cantidad de consumo:</label>
                 <input type="text" id="text" class="form-control" name="consumo" pattern="\d+(\.\d+)?" required style="width: 40%">
             </div>
+              <label>Unidad de Medida</label>
               <select name="unidadMedida">
                 <%
                      Conexion sql = new Conexion();
                     ArrayList<UnidadMedida> unidades = sql.seleccionarUnidadesMedida();
                     for (UnidadMedida unidadMedida : unidades) {
                 %>
+               
                 <option name="unidadMedida" value="<%= unidadMedida.getCodigoUnidadMedida() %>"><%= unidadMedida.getUnidadMedidad() %></option>
                 <%
                     }

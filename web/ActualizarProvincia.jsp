@@ -27,7 +27,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el nuevo nombre de la provincia:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="nuevo nombre provincia" required Style =" width: 40%">
             </div>
-            <
+            
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

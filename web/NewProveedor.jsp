@@ -15,33 +15,33 @@
         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
-<body>
+    <body>
         <form style="margin-left: 10px"  action= "InsertValidationProveedor.jsp" method="post">
             <div>
-                <h1 class="Title">insertar nuevo empleado</h1>
+                <h1 class="Title">Insertar Nuevo Empleado</h1>
             </div>
 
-
+            <label>Sucursal</label>
             <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Sucursal> sucursales = sql.obtenerSucursales();
                     for (Sucursal sucursal : sucursales) {
                 %>
-                <option name="sucursal" value="<%= sucursal.getCodigoSucursal() %>"><%= sucursal.getNombreSucursal() %></option>
+                <option name="sucursal" value="<%= sucursal.getCodigoSucursal()%>"><%= sucursal.getNombreSucursal()%></option>
                 <%
                     }
                 %>
             </select>
-            
-            
+
+
             <div class="form-group">
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Nombre Proveedor:</label>
                 <input type="text" id="text" class="form-control" name="Nombre"  required style="width: 40%">
             </div>
-           
-            
-           
+
+
+
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

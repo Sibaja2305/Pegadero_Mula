@@ -18,10 +18,10 @@
     <body>
         <form style="margin-left: 10px"  action= "InsertValidationBonificacion.jsp" method="post">
             <div>
-                <h1 class="Title">insertar nuevo empleado</h1>
+                <h1 class="Title">Insertar Nuevo Empleado</h1>
             </div>
 
-
+            <label>Empleado:</label>
             <select name="empleado">
                 <%
                     Conexion sql = new Conexion();

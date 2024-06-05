@@ -30,6 +30,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el nuevo nombre del Distrito:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="nuevo nombre Distrito" required Style =" width: 40%">
             </div>
+            <label>Canton:</label>
              <select name="canton">
                 <%
                     Conexion sql = new Conexion();

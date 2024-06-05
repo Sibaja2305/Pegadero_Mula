@@ -60,8 +60,8 @@ public class Conexion {
 
     public static Connection getConexion() {
         String conexionUrl = "jdbc:sqlserver://localhost:1433;"
-                + "database=Pegadero_Mula;user=sibaja;"
-                + "password=root2;loginTimeout=30;"
+                + "database=Pegadero_Mula;user=admin;"
+                + "password=root;loginTimeout=30;"
                 + "trustServerCertificate=true";
         try {
             // Registrar el driver explícitamente

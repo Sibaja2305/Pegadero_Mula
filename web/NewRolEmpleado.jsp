@@ -16,11 +16,11 @@
     <body>
     <form style="margin-left: 10px"  action= "InsertValidationRolEmpleado.jsp" method="post">
             <div>
-                <h1 class="Title">insertar Rol</h1>
+                <h1 class="Title">Insertar Rol</h1>
             </div>
            
              <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite el nombre del nuevo rol:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el nombre del nuevo rol:</label>
                 <input type="text" id="monto" class="form-control" name="rol"  required style="width: 40%">
             </div>
 

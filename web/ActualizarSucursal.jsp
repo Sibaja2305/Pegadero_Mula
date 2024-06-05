@@ -19,7 +19,7 @@
          <%int codigo = Integer.parseInt(request.getParameter("updateSucursal"));%>
         <form style="margin-left: 10px"  action= "ActualizarValidationSucursal.jsp" method="post">
             <div>
-                <h1 class="Title">Actualizar/h1>
+                <h1 class="Title">Actualizar</h1>
             </div>
             <div class="form-group">
                 
@@ -37,6 +37,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite el correo:</label>
                 <input type="text" id="nombre" class="form-control" name="correo" placeholder="example@gmail.com" required Style =" width: 40%">
             </div>
+            <label>Direccion</label>
             <select name="direccion">
                 <%
                     Conexion sql = new Conexion();

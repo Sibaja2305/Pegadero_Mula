@@ -17,14 +17,14 @@
         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
-   <body>
-       <%int codigo = Integer.parseInt(request.getParameter("updateEmpleado"));%>
+    <body>
+        <%int codigo = Integer.parseInt(request.getParameter("updateEmpleado"));%>
         <form style="margin-left: 10px"  action= "ActualizarValidationEmpleado.jsp" method="post">
             <div>
                 <h1 class="Title">Actualizar</h1>
             </div>
-              <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
-
+            <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
+            <label>Sucursal:</label>
             <select name="sucursal">
                 <%
                     Conexion sql = new Conexion();
@@ -36,6 +36,7 @@
                     }
                 %>
             </select>
+            <label>Rol:</label>
             <select name="rol">
                 <%
                     ArrayList<RolEmpleado> roles = sql.getRolesEmpleado();
@@ -46,6 +47,7 @@
                     }
                 %>
             </select>
+            <label>Horas Extra</label>
             <select name="horas">
                 <%
                     ArrayList<HorasExtras> horas = sql.getHorasExtra();

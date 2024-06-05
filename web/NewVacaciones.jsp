@@ -18,33 +18,33 @@
     <body>
         <form style="margin-left: 10px"  action= "InsertValidationVacaciones.jsp" method="post">
             <div>
-                <h1 class="Title">insertar nuevo empleado</h1>
+                <h1 class="Title">Insertar Nuevo Empleado</h1>
             </div>
 
-
+            <label>Empleado:</label>
             <select name="empleado">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Empleado> empleados = sql.seleccionarEmpleados();
                     for (Empleado empleado : empleados) {
                 %>
-                <option name="empleado" value="<%= empleado.getCodigoEmpleado() %>"><%= empleado.getNombre() %></option>
+                <option name="empleado" value="<%= empleado.getCodigoEmpleado()%>"><%= empleado.getNombre()%></option>
                 <%
                     }
                 %>
             </select>
-            
-            
+
+
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">seleccione la fecha de inicio:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Seleccione la fecha de inicio:</label>
                 <input type="date" id="text" class="form-control" name="fechaInicio"  required style="width: 40%">
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">selecione la fecha de fin :</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Selecione la fecha de fin :</label>
                 <input type="date" id="text" class="form-control" name="FechaFin"  required style="width: 40%">
             </div>
-            
-           
+
+
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

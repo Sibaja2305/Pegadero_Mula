@@ -20,7 +20,7 @@
     <body>
         <form style="margin-left: 10px"  action= "InsertValidationProductoIngrediente.jsp" method="post">
             <div>
-                <h1 class="Title">insertar</h1>
+                <h1 class="Title">Insertar</h1>
             </div>
             <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Ingrediente:</label>
             <select name="ingrediente">
@@ -51,6 +51,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">cantidad de consumo:</label>
                 <input type="text" id="text" class="form-control" name="consumo" pattern="\d+(\.\d+)?" required style="width: 40%">
             </div>
+            <label>Medida</label>
               <select name="unidadMedida">
                 <%
                     

@@ -23,9 +23,9 @@
             align-content: center;
         }
         .container{
-            background-color: gainsboro;
+
             border-radius:10px;
-            border: solid black;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
             padding: 15px;
         }
         .sucursalContainer{
@@ -121,21 +121,21 @@
 
 
 
-                    <%--Informacion de Impuesto--%>
-                    <div class="taxContainer">
-                        <p> <%=list.get(0).getTipoImpuesto()%></p>
-                        <p> <%=list.get(0).getImpuesto()%></p>
-                    </div>
-                    <%--Total Factura--%>
-                    <div>
-                        <h2>Total: <%=list.get(0).getTotal()%></h2>
-                    </div>
+                <%--Informacion de Impuesto--%>
+                <div class="taxContainer">
+                    <p> <%=list.get(0).getTipoImpuesto()%></p>
+                    <p> <%=list.get(0).getImpuesto()%></p>
                 </div>
+                <%--Total Factura--%>
                 <div>
-                    <a href="Dashboard.jsp">
-                        <button>Finalizar</button>
-                    </a>
+                    <h2>Total: <%=list.get(0).getTotal()%></h2>
                 </div>
             </div>
+            <div>
+                <a href="Dashboard.jsp">
+                    <button>Finalizar</button>
+                </a>
+            </div>
+        </div>
     </body>
 </html>

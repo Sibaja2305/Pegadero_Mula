@@ -16,6 +16,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -24,7 +25,7 @@
                 <h1 class="Title">Insertar Clientes Sucursales</h1>
             </div>
             
-            
+            <label>Cliente:</label>
             <select name="cliente">
                 <%
                     Conexion sql = new Conexion();
@@ -36,7 +37,7 @@
                     }
                 %>
             </select>
-           
+           <label>Sucursal:</label>
             <select name="sucursal">
                 <%
                     

@@ -15,27 +15,27 @@
         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
-     <body>
-       <%int codigo = Integer.parseInt(request.getParameter("update"));%>
+    <body>
+        <%int codigo = Integer.parseInt(request.getParameter("update"));%>
         <form style="margin-left: 10px"  action= "ActualizarValidationVacaciones.jsp" method="post">
             <div>
                 <h1 class="Title">Actualizar</h1>
             </div>
-              <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
-
-           <select name="empleado">
+            <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
+            <label>Empleado</label>
+            <select name="empleado">
                 <%
                     Conexion sql = new Conexion();
                     ArrayList<Empleado> empleados = sql.seleccionarEmpleados();
                     for (Empleado empleado : empleados) {
                 %>
-                <option name="empleado" value="<%= empleado.getCodigoEmpleado() %>"><%= empleado.getNombre() %></option>
+                <option name="empleado" value="<%= empleado.getCodigoEmpleado()%>"><%= empleado.getNombre()%></option>
                 <%
                     }
                 %>
             </select>
-            
-            
+
+
             <div class="form-group">
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">seleccione la fecha de inicio:</label>
                 <input type="date" id="text" class="form-control" name="fechaInicio"  required style="width: 40%">
@@ -44,7 +44,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">selecione la fecha de fin :</label>
                 <input type="date" id="text" class="form-control" name="FechaFin"  required style="width: 40%">
             </div>
-            
+
             <div style="float: left; margin-top: 25px">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

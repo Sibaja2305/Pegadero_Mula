@@ -27,7 +27,7 @@
                 <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la sucursal:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite el servicio:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="servicio" required Style =" width: 40%">
             </div>
             <div class="form-group">

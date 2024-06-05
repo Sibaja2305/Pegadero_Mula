@@ -16,6 +16,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <title>JSP Page</title>
     </head>
     <body>
@@ -30,7 +31,7 @@
                 <input  type="text" hidden class="form-control" name="codigo" value=<%=codigo%> required Style ="width: 40%" >
             </div>
             
-            
+            <label>Mesa:</label>
            <select name="mesa">
                 <option name="mesa" value="<%= "0" %>">Null</option>
                 <%
@@ -44,6 +45,7 @@
                     }
                 %>
             </select>
+            <label  class="labels" style="margin-bottom: 5px; margin-top: 10px">Empleado:</label>
              <select name="empleado">
                 <%
                    
@@ -55,7 +57,7 @@
                     }
                 %>
             </select>
-            
+            <label  class="labels" style="margin-bottom: 5px; margin-top: 10px">Express:</label>
              <select name="express">
                   <option name="express" value="<%= "0" %>">Null</option>
                 <%
@@ -69,17 +71,19 @@
                     }
                 %>
             </select>
-             <select name="cliente">
+            <label  class="labels" style="margin-bottom: 5px; margin-top: 10px">Cliente</label>
+             <select name="cliente:">
                 <%
                   
                     ArrayList<Cliente> clientes = sql.obtenerClientes(); 
                     for (Cliente cliente : clientes) {
                 %>
-                <option name="cliente" value="<%= cliente.getC_Cliente() %>"><%= cliente.getC_Cedula() %></option>
+                <option name="cliente" value="<%= cliente.getC_Cliente() %>"><%= cliente.getC_Persona() %></option>
                 <%
                     }
                 %>
             </select>
+            <label  class="labels" style="margin-bottom: 5px; margin-top: 10px">Sucursal:</label>
              <select name="sucursal">
                 <%
                   

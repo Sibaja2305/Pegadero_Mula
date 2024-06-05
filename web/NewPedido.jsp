@@ -78,7 +78,7 @@
                     ArrayList<Cliente> clientes = sql.obtenerClientes(); 
                     for (Cliente cliente : clientes) {
                 %>
-                <option name="cliente" value="<%= cliente.getC_Cliente() %>"><%= cliente.getC_Cedula() %></option>
+                <option name="cliente" value="<%= cliente.getC_Cliente() %>"><%= cliente.getC_Persona() %></option>
                 <%
                     }
                 %>
@@ -99,11 +99,11 @@
             </select>
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite la hora de solicitud:</label>
                 <input type="time" id="nombre" class="form-control" name="horaSolicitud" required Style =" width: 40%">
             </div>
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">digite la fecha:</label>
+                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite la hora de entrega:</label>
                 <input type="time" id="nombre" class="form-control" name="horaEntrega" required Style =" width: 40%">
             </div>
           

@@ -30,6 +30,7 @@
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite la nueva direccion:</label>
                 <input type="text" id="nombre" class="form-control" name="nombre" placeholder="nueva Direccion" required Style =" width: 40%">
             </div>
+            <label>Distrito:</label>
              <select name="direccion">
                 <%
                     Conexion sql = new Conexion();
