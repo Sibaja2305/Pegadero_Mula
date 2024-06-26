@@ -22,7 +22,7 @@
  
 int codigoFactura = sql.insertarFactura(codigoPedido, metodo, sucursal, impuesto);
 
-    if (codigoPedido != -1) { // Suponiendo que -1 indica que no se insertó correctamente
+    if (codigoFactura != -1) { // Suponiendo que -1 indica que no se insertó correctamente
         response.sendRedirect("VerFactura.jsp?codigoFactura=" + codigoFactura);
         System.out.println("codigo" + codigoFactura);
     } else {

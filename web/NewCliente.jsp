@@ -23,11 +23,14 @@
                 <h1 class="Title">Clientes</h1>
             </div>
             
-            
+             <%
+                 String persona = request.getParameter("seleccionado");
+                %>
             
             <div class="form-group">
-                <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite la cedula:</label>
-                <input type="text" id="nombre" class="form-control" name="cedula" placeholder="cedula" required Style =" width: 40%">
+                
+                <input hidden="true" type="text" id="nombre" class="form-control" name="cedula"
+                       placeholder="cedula" value="<%=persona %>" required Style =" width: 40%">
             </div>
              <div class="form-group">
                 <label class="labels" style="margin-bottom: 5px; margin-top: 10px">Digite el numero de telefono:</label>

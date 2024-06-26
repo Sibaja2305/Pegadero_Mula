@@ -28,6 +28,7 @@ import Clases.PagoEmpleado;
 import Clases.PagoProveedor;
 import Clases.PagosServicios;
 import Clases.Pedido;
+import Clases.Persona;
 import Clases.Producto;
 import Clases.ProductoIngrediente;
 import Clases.Proveedor;
@@ -102,6 +103,35 @@ public class Conexion {
             }
 
             return clientes; // Devolver el ArrayList de clientes
+        }
+
+        return null; // En caso de conexión nula
+    }
+    public static ArrayList<Persona> busquedaCedula(String criterioBusqueda) throws SQLException, ClassNotFoundException {
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        Connection conexion = Conexion.getConexion(); // Obtener la conexión
+
+        if (conexion != null) {
+            ArrayList<Persona> personas = new ArrayList<>();
+            String procedimiento = "{call SP_OBTENER_CLIENTE_CEDULA(?)}";
+
+            try (CallableStatement llamada = conexion.prepareCall(procedimiento)) {
+                llamada.setString(1, criterioBusqueda); // Establecer el parámetro
+
+                ResultSet resultado = llamada.executeQuery(); // Ejecutar el procedimiento almacenado
+
+                while (resultado.next()) {
+                    int codigoPersona = resultado.getInt("C_Persona");
+                    String cedula = resultado.getString("C_Cedula");
+                    String nombre = resultado.getString("D_Nombre");
+                    String primerApellido = resultado.getString("D_Primer_Apellido");
+                    String segundoApellido = resultado.getString("D_Segundo_Apellido");
+                    Persona persona = new Persona(codigoPersona, cedula, nombre, primerApellido, segundoApellido);
+                    personas.add(persona);
+                }
+            }
+
+            return personas; // Devolver el ArrayList de clientes
         }
 
         return null; // En caso de conexión nula

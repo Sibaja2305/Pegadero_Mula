@@ -101,6 +101,14 @@
                     <button onclick="location.href = 'UnidadesMedida.jsp'" class="button">UnidadesMedida</button>
                     <button onclick="location.href = 'Vacaciones.jsp'" class="button">Vacaciones</button>
                     <button onclick="location.href = 'Factura.jsp'" class="button">Factura</button>
+                     <button onclick="location.href = 'Escenario1.jsp'" class="button">Escenario 1</button>
+                      <button onclick="location.href = 'Escenario2.jsp'" class="button">Escenario 2</button>
+                      <button onclick="location.href = 'Escenario3.jsp'" class="button">Escenario 3</button>
+                      <button onclick="location.href = 'Escenario4.jsp'" class="button">Escenario 4</button>
+                      <button onclick="location.href = 'Escenario5.jsp'" class="button">Escenario 5</button>
+                      <button onclick="location.href = 'Escenario6.jsp'" class="button">Escenario 6</button>
+                      <button onclick="location.href = 'Escenario7.jsp'" class="button">Escenario 7</button>
+                      <button onclick="location.href = 'Escenario8.jsp'" class="button">Escenario 8</button>
 
                 </div>
             </div>
